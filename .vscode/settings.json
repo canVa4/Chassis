@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "vega_action.h": "c",
+        "usart.h": "c",
+        "cmd_func.h": "c",
+        "point_zx.h": "c",
+        "chassis.h": "c",
+        "track.h": "c",
+        "points.h": "c"
+    }
+}
