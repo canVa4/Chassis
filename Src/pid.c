@@ -1,6 +1,6 @@
 #include "pid.h"
 
-float PID_Release(PID_Struct *PID, float target, float now) {
+float PID_Release_zx(PID_Struct_zx *PID, float target, float now) {
 	float err;
 	float err_dt;
 	float result;
@@ -22,13 +22,13 @@ float PID_Release(PID_Struct *PID, float target, float now) {
 	return result;
 }
 
-void reset_PID(PID_Struct * s) {
+void reset_PID_zx(PID_Struct_zx * s) {
 	s->i = 0;
 	s->last_err = 0;
 	s->last_d = 0;
 }
 
-void PID_init()
+void PID_init_zx()
 {
   
 }

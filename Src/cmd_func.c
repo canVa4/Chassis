@@ -213,11 +213,13 @@ int start_speed = 0 , final_speed = 0 , max_speed = 10;
 
 void cmd_point_tracer(int argc,char *argv[]){
   uprintf(CMD_USART , "point_tracer : tracing %f,%f now!\r\n", atof(argv[1]) , atof(argv[2]) );
-  point_x = atof(argv[1]);
-  point_y = atof(argv[2]);
-  start_speed = atoi(argv[3]);
-  final_speed = atoi(argv[4]);
-  max_speed = atoi(argv[5]);
+  start_point_x = atof(argv[1]);
+  start_point_y = atof(argv[2]);
+  point_x = atof(argv[3]);
+  point_y = atof(argv[4]);
+  start_speed = atoi(argv[5]);
+  final_speed = atoi(argv[6]);
+  max_speed = atoi(argv[7]);
   uprintf(CMD_USART,"start_speed : %d, final_speed : %d, max_speed : %d\r\n",start_speed, final_speed,max_speed);
 }
 
@@ -237,4 +239,14 @@ void cmd_set_boost_slow(int argc,char *argv[]){
   Boost_Period = atof( argv[1] );
   Slow_Period = atof(argv[2]);
   uprintf(CMD_USART,"set_boost_slow : boost_period = %f , slow = %f\r\n",Boost_Period, Slow_Period);
+}
+
+float line_control_p_x,line_control_p_y,start_point_x,start_point_y;
+void cmd_line_control_test(int argc,char *argv[]){
+  line_control_flag_first = 1;
+  total_line_control_flag = atoi(argv[1]);
+  start_point_x = atof(argv[2]);
+  start_point_y = atof(argv[3]);
+  line_control_p_x = atof(argv[4]);
+  line_control_p_y = atof(argv[5]);
 }

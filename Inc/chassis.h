@@ -48,7 +48,7 @@ extern "C" {
 
 #define LINE_CONTROL_NUMBER 100
 
-#define ARRIVE_DISTANCE 0.05
+#define ARRIVE_DISTANCE 0.015
 
 
 extern int open_box;
@@ -221,9 +221,14 @@ void chassis_gostraight1(int speed , float angle, float turn, int is_handle);
 void chassis_modify_handle_control();
 
 float point_tracer_angle_return( float point_x , float point_y );
-int point_tracer (float point_x , float point_y , int start_speed , int final_speed , int max_speed);
+int point_tracer (float start_x , float start_y ,float point_x , float point_y , int start_speed , int final_speed , int max_speed);
 
 void point_collection_tracer(int point_num);
+
+vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed);
+extern int total_line_control_flag;
+extern int line_control_flag_first;
+
 extern int ENBALE_POINT_COLLECTION_TRACER;
 
 extern int first_time_controler;

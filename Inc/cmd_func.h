@@ -49,6 +49,9 @@ void cmd_point_collection_tracer(int argc,char *argv[]);
 
 extern int start_speed , final_speed , max_speed ;
 
+extern float line_control_p_x,line_control_p_y,start_point_x,start_point_y;
+
+void cmd_line_control_test(int argc,char *argv[]);
 void cmd_set_boost_slow(int argc,char *argv[]);
 #ifdef __cplusplus
 }

@@ -1,5 +1,8 @@
 #include "point_zx.h"
-
+float zx_points_pos_x[ZX_POINTS_NUM]={0,0,0,0};
+float zx_points_pos_y[ZX_POINTS_NUM]={0,1,1.5,2};
+int speed_zx[ZX_POINTS_NUM + 1]={125,400,400,50};
+/*
 float zx_points_pos_x[ZX_POINTS_NUM]={0.000000,
 
 0.190000,
@@ -179,3 +182,4 @@ int speed_zx[ZX_POINTS_NUM + 1]={125,
 720,
 
 50};
+*/

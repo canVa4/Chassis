@@ -6,6 +6,7 @@
         "point_zx.h": "c",
         "chassis.h": "c",
         "track.h": "c",
-        "points.h": "c"
+        "points.h": "c",
+        "pid.h": "c"
     }
 }

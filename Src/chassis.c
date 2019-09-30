@@ -246,8 +246,6 @@ void chassis_update(void)
     chassis.last_pos_x = chassis.pos_x;
     chassis.last_pos_y = chassis.pos_y;
     chassis.now_speed = vec_model(vec_create(chassis.speed_x,chassis.speed_y));
-    
-    
 }
 
 /*
@@ -333,13 +331,13 @@ void chassis_gostraight_zx(int speed , float angle, float turn, int is_handle)
     {
         turn_output = chassis_PID_Angle_Control(turn);
     }
-    if(turn_output >200)//陀螺仪角度PID
+    if(turn_output >350)//陀螺仪角度PID
     {
-        turn_output = 200;
+        turn_output = 350;
     }
-    if(turn_output < -200)
+    if(turn_output < -350)
     {
-        turn_output = -200;
+        turn_output = -350;
     }
     
     
@@ -1154,47 +1152,28 @@ void chassis_modify_pos(float x[],float y[],float x0,float y0)
 }
 
 
+/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
-/**底盘驱动
-*参数：float angle 	方向角
-*      int   speed    速度
-float turn  自转方位角
-*返回值： 无
-*说明:
+/**速度矢量相加，返回值为合速度矢量
+*参数：vec1和vec2为待相加的矢量
+*返回值： 合速度矢量
+*说明: 用于point_tracer使用
+*作者: zx
 */
-void chassis_gostraight1(int speed , float angle, float turn, int is_handle)
-{
-    float Chassis_motor0 = -(speed*cos((ERR_angle_m0 + chassis.angle) - angle));
-    float Chassis_motor1 = -(speed*cos((ERR_angle_m1 + chassis.angle) - angle));
-    float Chassis_motor3 = -(speed*cos((ERR_angle_m3 + chassis.angle) - angle));
-    
-    float turn_output = 0;
-    /*
-    if(is_handle)
-    {
-        turn_output = -turn;//全场定位方向环  
-    }
-    else
-    {
-        turn_output = chassis_PID_Angle_Control(turn);
-    }
-    if(turn_output >2000)//陀螺仪角度PID
-    {
-        turn_output = 2000;
-    }
-    if(turn_output < -2000)
-    {
-        turn_output = -2000;
-    }
-    */
-    
-    maxon_canset3speed((int)(Chassis_motor0 + turn_output),
-                       (int)(Chassis_motor3 + turn_output),
-                       (int)(Chassis_motor1 + turn_output));
+vec speed_vec_add(vec vec1 , vec vec2){
+  float v1_x , v1_y , v2_x , v2_y,speed,angle;
+  v1_x = cosf(vec1.y)* vec1.x;
+  v1_y = sinf(vec1.y)* vec1.x;
+  v2_x = cosf(vec2.y)* vec2.x;
+  v2_y = sinf(vec2.y)* vec2.x;
+  speed = sqrtf( (v1_x+v2_x) * (v1_x+v2_x) + (v1_y+v2_y)*(v1_y+v2_y));
+  angle = atan2f( v2_y + v1_y , v1_x + v2_x );
+  return vec_create(speed,angle);
 }
 
-PID_Struct line_control_PID = {
-1500,   //kp
+/*line_control函数中的PID*/
+PID_Struct_zx line_control_PID = {
+1000,   //kp
 0,      //Kd
 0,      //Ki
 0,      //i （中间变量）
@@ -1203,35 +1182,53 @@ PID_Struct line_control_PID = {
 0,      //last_d
 0.005   //I_TIME
 };
-
-line_control_flag_first = 1;
-vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed){
-  float origin_distance;
-  float origin_angle , current_agnle , current_distance , error_vertical , angle_sub , error_on_origin , rate;
+//以下变量为line_control内部调用
+int total_line_control_flag = 1;    //为0时禁用line_control，为1时启用
+int line_control_flag_first = 1;    //为1时：为第一次跑一个新点（设置这个flag的目的主要为减少计算次数）
+float origin_distance,origin_angle;
+/**根据与轨迹（直线）的误差生成纠正的速度矢量
+*参数：float p1_x，p1_y 地面坐标系下开始点的位置
+*参数：float p2_x，p2_y 地面坐标系下开始点的位置
+*参数：float max_speed 最大速度（限幅使用）
+*返回值： 底盘驱动的方向矢量 vec.x 为速度大小，vec.y为速度方向（方向为：-PI~PI)
+*说明: 纠正轨迹使用，配合point_tracer使用
+*作者: zx
+*/
+vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed){  
+  float current_agnle , current_distance , error_vertical , error_on_origin ,angle_sub;
   float reference_point_x , reference_point_y;
   float target_angle , target_speed;
   //float out_put_speed = 0.0f;
-  if(line_control_flag_first == 1){
-  origin_angle = atan2f( p2_y - p1_y , p2_x - p1_x );    
-  origin_distance = sqrtf( (p2_x - p1_x)*(p2_x - p1_x) + (p2_y - p1_y)*(p2_y - p1_y) );
-  line_control_flag_first = 0;
-  }  
+  if(total_line_control_flag == 1){
+    if(line_control_flag_first == 1){
+    origin_angle = atan2f( p2_y - p1_y , p2_x - p1_x );    
+    origin_distance = sqrtf( (p2_x - p1_x)*(p2_x - p1_x) + (p2_y - p1_y)*(p2_y - p1_y) );
+    line_control_flag_first = 0;
+    }  
+    
+    current_agnle = atan2f( p2_y - chassis.pos_y , p2_x - chassis.pos_x );
+    current_distance = sqrtf( (p2_x - chassis.pos_x)*(p2_x - chassis.pos_x) + (p2_y - chassis.pos_y)*(p2_y - chassis.pos_y) );
+    angle_sub = fabsf(origin_angle - current_agnle);
+    error_on_origin = cosf(angle_sub)*current_distance;
+    error_vertical = fabsf(sinf(angle_sub)*current_distance);  //控制量
+
+    reference_point_x = (origin_distance - error_on_origin)*cosf(origin_angle) + p1_x;
+    reference_point_y = (origin_distance - error_on_origin)*sinf(origin_angle) + p1_y;  
+
+    target_angle = atan2f(reference_point_y - chassis.pos_y , reference_point_x - chassis.pos_x);   //用来矫正的速度矢量的方向
+    
+    if(error_vertical <= 1e-3){
+      target_speed = 0;
+    }else
+    target_speed = fabsf(PID_Release_zx(&line_control_PID , 0 , error_vertical));
+
+    if(target_speed >= max_speed) target_speed = max_speed;
+    if(target_speed <= -max_speed) target_speed = -max_speed;
   
-  current_agnle = atan2f( p2_y - chassis.pos_y , p2_x - chassis.pos_x );
-  current_distance = atan2f(p2_y - chassis.pos_y , p2_x - chassis.pos_x );
-  angle_sub = fabsf(origin_angle - current_agnle);
-  error_on_origin = cosf(angle_sub)*current_distance;
-  error_vertical = sinf(angle_sub)*current_distance;  //控制量
-
-  rate = error_on_origin / origin_distance;
-
-  reference_point_x = origin_distance - cosf(origin_angle)*origin_distance + p1_x;
-  reference_point_y = origin_distance - sinf(origin_angle)*origin_distance + p1_y;  
-
-  target_angle = atan2f(reference_point_y - chassis.pos_y , reference_point_x - chassis.pos_x);   //用来矫正的速度矢量的方向
-  target_speed = PID_Release(&line_control_PID , 0 , error_vertical);
-  if(target_speed >= MAX_SPEED_ZX) target_speed = MAX_SPEED_ZX;
-  if(target_speed <= -MAX_SPEED_ZX) target_speed = -MAX_SPEED_ZX;
+    // what's beneath is the test progarm
+    // uprintf(CMD_USART , "speed : %f , angle : %f\r\n" , target_speed , target_angle);
+    // chassis_gostraight_zx( (int)target_speed , target_angle , 0 , 0);
+  }
   return vec_create(target_speed , target_angle);
 }
 
@@ -1260,7 +1257,7 @@ float point_tracer_angle_return( float point_x , float point_y ){
 float Boost_Slow_Period = 0.105;
 float Boost_Period = 0.1;
 float Slow_Period = 0.16;
-int first_time_controler = 1;
+int first_time_controler = 1; //值为1时：对一个新点使用此函数（不用多次调用BoostAndSlowUpdate）
 float last_point_x,last_point_y,origin_distance;
 
 /**梯形速度曲线 加速阶段和减速阶段根据不同距离和速度进行自动调整 
@@ -1288,7 +1285,8 @@ void BoostAndSlowUpdate(float total_distance , int start_speed , int final_speed
   }
 }
 
-float last_pos , this_time_pos;
+//float last_pos , this_time_pos;
+
 /**速度曲线生成 梯形曲线
 *参数：float point_y 	 point_x  地面坐标系下目标点的位置 start_speed 开始时速度 final_speed结束时速度 max_speed最大速度
 *返回值： 电机当前的速度
@@ -1297,20 +1295,18 @@ float last_pos , this_time_pos;
 int speed_trapezium (float point_x , float point_y , int start_speed , int final_speed , int max_speed){
   float distance_to_target,speed;
   int int_speed;
-  if(first_time_controler == 0){
-    this_time_pos = chassis.pos_y;
-    uprintf(CMD_USART , "speed is : %f , %f , %f\r\n", (last_pos - this_time_pos)/0.005, chassis.pos_x, chassis.pos_y);
-    last_pos = this_time_pos;
-  }
-
-
+  // if(first_time_controler == 0){
+  //   this_time_pos = chassis.pos_y;
+  //   uprintf(CMD_USART , "speed is : %f , %f , %f\r\n", (last_pos - this_time_pos)/0.005, chassis.pos_x, chassis.pos_y);
+  //   last_pos = this_time_pos;
+  // } //this part of code were uesd to test this function
   if(first_time_controler == 1){
     last_point_x = chassis.pos_x;
     last_point_y = chassis.pos_y;
     first_time_controler = 0;
     origin_distance = sqrtf( (point_x - last_point_x)*(point_x - last_point_x) + (point_y - last_point_y)*(point_y - last_point_y) );
     BoostAndSlowUpdate(origin_distance , start_speed , final_speed , max_speed);
-    last_pos = chassis.pos_y;
+    //last_pos = chassis.pos_y;
   }
   distance_to_target = sqrtf( (point_x - chassis.pos_x)*(point_x - chassis.pos_x) + (point_y - chassis.pos_y)*(point_y - chassis.pos_y) );
 
@@ -1338,34 +1334,49 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
     int_speed = max_speed;
   else if(int_speed <= 0) 
     int_speed = 0;
-  
-  
-  return int_speed;
 
+  uprintf(CMD_USART,"speed : %d  " , int_speed);
+  return int_speed;
 }
 
-
-
-
-int point_tracer_flag = 0;
-int point_arrived_flag = 0;
-
+int point_tracer_flag = 0;  //为1时：可以执行point_tracer；为0时：禁用point_tracer PS:此变量主要为调试时方便控制
+int point_arrived_flag = 0; //到达点后为1
+/**到达点后，将各种flag置位
+*参数：void
+*返回值： void
+*说明: 为point_tracer内部函数，配合point_tracer使用
+*作者: zx
+*/
 void point_arrive(){
   point_arrived_flag = 1;
   point_tracer_flag = 1;
-  first_time_controler = 0;
+  first_time_controler = 1;
+  line_control_flag_first = 1;
 }
 
-int point_tracer (float point_x , float point_y , int start_speed , int final_speed , int max_speed){
-  float angle;
+/**【核心函数】 point_tracer,跑点函数
+*参数：float start_x , float start_y 为起始点地面坐标系坐标
+*参数：float point_x , float point_y 为最终点地面坐标系坐标
+*参数：int start_speed , int final_speed , int max_speed; start_speed 开始时速度，max_speed最大速度，final_speed到达终点时速度
+*返回值： int; <1> 返回值为0时：可以开始跑点，并且未到达目标点
+*返回值： int; <2> 返回值为-1时：目前不程序不允许跑点
+*返回值： int; <3> 返回值为1时：到达目标点
+*说明: 核心函数，用于跑点，最终配合point_collection_tracer（跑点集）使用
+*作者: zx
+*/
+vec combine_vec , line_control_vec;   //point_tracer内部变量
+int point_tracer (float start_x , float start_y ,float point_x , float point_y , int start_speed , int final_speed , int max_speed){
+  float toward_angle,toward_speed;
   float distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
   if( point_tracer_flag == 1 && distance >= ARRIVE_DISTANCE ) //可以开始跑点，并且未到达目标点
   { 
-    angle = point_tracer_angle_return(point_x , point_y);
-    //first_time_controler = 1;
-    
+    toward_angle = point_tracer_angle_return(point_x , point_y);
+    toward_speed = speed_trapezium (point_x , point_y , start_speed , final_speed , max_speed);
+    //combine_vec = vec_create(toward_speed , toward_angle);
+    line_control_vec = line_control(start_x , start_y , point_x , point_y , 400);
+    combine_vec = speed_vec_add( vec_create(toward_speed , toward_angle) , line_control_vec);
     //chassis_update();
-    chassis_gostraight_zx( speed_trapezium (point_x , point_y , start_speed , final_speed , max_speed) , angle , 0 , 0);
+    chassis_gostraight_zx( (int)combine_vec.x , combine_vec.y , 0 , 0);
     return 0;
   }
   else {
@@ -1374,7 +1385,7 @@ int point_tracer (float point_x , float point_y , int start_speed , int final_sp
 
     if(distance < ARRIVE_DISTANCE) //到达点
     {
-      chassis_gostraight_zx( 0 , angle , chassis.angle , 0);
+      chassis_gostraight_zx( 0 , combine_vec.y , chassis.angle , 0);
       point_arrive();
       return 1;
     }
@@ -1385,8 +1396,6 @@ int point_tracer (float point_x , float point_y , int start_speed , int final_sp
 
 int ENBALE_POINT_COLLECTION_TRACER = 0;
 
-
-
 // float points_x[7]={3 , 3.7 , 3 , 2.3 , 3 , 3.7 ,3};
 // float points_y[7]={6.5 , 7.5 , 8.5 , 9.5 , 10.5 , 11.5 , 12.5};
 // int speed_control[8]={125 ,350, 200 ,830 , 200, 830, 125 , 50};
@@ -1394,10 +1403,6 @@ int ENBALE_POINT_COLLECTION_TRACER = 0;
 // float points_x[1]={3};
 // float points_y[1]={10};
 // int speed_control[2]={125 ,0};
-
-
-
-
 int count = 0;
 int point_count_control_flag = 0;
 
@@ -1406,16 +1411,16 @@ void point_collection_tracer(int point_num){
   if(ENBALE_POINT_COLLECTION_TRACER == 1 && count < point_num ){
     if(count < point_num-1){
       if(count == 0){      
-        mid_control = point_tracer(zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1] , 850);
+        mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1] , 850);
       }  
       if(count != 0){
         if(point_arrived_flag == 1){      
-          mid_control = point_tracer(zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1], 850);
+          mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1], 850);
         }
       }
     }
     else{   //count == point_num-1
-      mid_control = point_tracer(zx_points_pos_x[count] ,zx_points_pos_y[count], 150 , 0 , 200);
+      mid_control = point_tracer(zx_points_pos_x[count-1],zx_points_pos_y[count-1],zx_points_pos_x[count] ,zx_points_pos_y[count], 150 , 0 , 200);
     }
 
     /* 以下为count++的控制 */
@@ -1436,22 +1441,3 @@ void point_collection_tracer(int point_num){
   }
 }
 
-
-
-/*
-void line_controler(float point_X , float point_y){
-  float origin_distance;
-  float origin_angle = atan2f( point_y - chassis.pos_y , point_x - chassis.pos_x );
-  float current_agnle , current_distance , error_vertical;
-  float long_rate , mid_x , mid_y;
-  if(first_time_controler == 1){
-  origin_distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
-  first_time_controler = 0;
-  }
-
-  error_vertical = origin_distance * sinf( fabsf( origin_angle - current_agnle) );
-  
-
-
-}
-*/

@@ -1,6 +1,8 @@
 #ifndef _pid_H_
 #define _pid_H_
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct {
 	float KP;
 	float KI;
@@ -10,7 +12,7 @@ typedef struct {
 	float i_max;
 	float last_d;
 	float I_TIME;
-} PID_Struct;
+} PID_Struct_zx;
 
 typedef struct {
 	float angular_x;
@@ -20,12 +22,15 @@ typedef struct {
 	float angle_roll;
 	float angle_yaw;
 	float angle_pitch;
-} Ring_Param_struct;
+} Ring_Param_struct_zx;
 
 #define Limit(value,max)     if(value>max)value=max;else if(value<-max)value=-max
 
-float PID_Release(PID_Struct *PID, float target, float now);
-void reset_PID(PID_Struct * s);
+float PID_Release_zx(PID_Struct_zx *PID, float target, float now);
+void reset_PID_zx(PID_Struct_zx * s);
 void PID_init();
 
+#ifdef __cplusplus
+}
 #endif
+#endif 
