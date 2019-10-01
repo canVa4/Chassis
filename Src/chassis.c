@@ -92,6 +92,7 @@ void chassis_init(void)
 {
     chassis_init_pos(zx_points_pos_x[0],zx_points_pos_y[0]);
     chassis_zero();
+    /*
     ChassisHandle.mode = 2;
     for(int i = 0; i < 10; i++)
     {
@@ -160,6 +161,7 @@ void chassis_init(void)
 
     }
     //uprintf(CMD_USART,"chassis and vega are ready!!!\r\n");
+    */
 }
 
 //计算距离
@@ -1173,9 +1175,9 @@ vec speed_vec_add(vec vec1 , vec vec2){
 
 /*line_control函数中的PID*/
 PID_Struct_zx line_control_PID = {
-1000,   //kp
-0,      //Kd
+3000,   //kp
 0,      //Ki
+50,      //Kd
 0,      //i （中间变量）
 0,      //last_error
 500,    //i_max
@@ -1226,8 +1228,8 @@ vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed
     if(target_speed <= -max_speed) target_speed = -max_speed;
   
     // what's beneath is the test progarm
-    // uprintf(CMD_USART , "speed : %f , angle : %f\r\n" , target_speed , target_angle);
-    // chassis_gostraight_zx( (int)target_speed , target_angle , 0 , 0);
+     uprintf(CMD_USART , "speed : %f , angle : %f\r\n" , target_speed , target_angle);
+     chassis_gostraight_zx( (int)target_speed , target_angle , 0 , 0);
   }
   return vec_create(target_speed , target_angle);
 }
@@ -1249,6 +1251,11 @@ float point_tracer_angle_return( float point_x , float point_y ){
   float chassis_target_y = point_y - chassis.pos_y;   //坐标系变换，在保证角度环（小车坐标系不变的情况下），讲目标点由地面坐标系变换到小车坐标系中
   float mid = atan2f(chassis_target_y , chassis_target_x);
   float angle = chassis_angle_subtract( mid , chassis.angle);
+  return angle;
+}
+
+float point_tracer_angle_return_static(float start_x, float start_y , float end_x , float end_y){
+  float angle = atan2f( end_y-start_y , end_x-start_x );
   return angle;
 }
 
@@ -1300,6 +1307,7 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
   //   uprintf(CMD_USART , "speed is : %f , %f , %f\r\n", (last_pos - this_time_pos)/0.005, chassis.pos_x, chassis.pos_y);
   //   last_pos = this_time_pos;
   // } //this part of code were uesd to test this function
+  
   if(first_time_controler == 1){
     last_point_x = chassis.pos_x;
     last_point_y = chassis.pos_y;
@@ -1314,19 +1322,25 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
   if(distance_to_target >=  1) distance_to_target = 1;
   if(distance_to_target <=  0) distance_to_target = 0;
 
-  //以下为一个分段函数，用这个函数计算速度 （梯形速度控制）
-  if(distance_to_target <= Boost_Period){     //对于max_speed==start_speed 时进行优化
-    if(start_speed == max_speed) speed = max_speed;
-    else
-    speed = (max_speed - start_speed)* distance_to_target/Boost_Period + start_speed; 
-  }
-  else if(distance_to_target > Slow_Period && distance_to_target <= 1 - Slow_Period){
-    speed = max_speed;
+  if(origin_distance <= 1) //如果距离小于20cm不进行梯形速度规划 使用从起始速度到最终速度的直接线性规划（一条连接起始速度和最终速度的直线）
+  {
+    speed = (final_speed - start_speed)*distance_to_target + start_speed;
   }
   else{
-    if(final_speed == max_speed) int_speed = max_speed; //对于max_speed==final_speed 时进行优化
-    else
-    speed = (final_speed - max_speed)/ Slow_Period * distance_to_target + ( Slow_Period * final_speed - final_speed + max_speed)/ Slow_Period;
+    //以下为一个分段函数，用这个函数计算速度 （梯形速度控制）
+    if(distance_to_target <= Boost_Period){     //对于max_speed==start_speed 时进行优化
+      if(start_speed == max_speed) speed = max_speed;
+      else
+      speed = (max_speed - start_speed)* distance_to_target/Boost_Period + start_speed; 
+    }
+    else if(distance_to_target > Slow_Period && distance_to_target <= 1 - Slow_Period){
+      speed = max_speed;
+    }
+    else{
+      if(final_speed == max_speed) int_speed = max_speed; //对于max_speed==final_speed 时进行优化
+      else
+      speed = (final_speed - max_speed)/ Slow_Period * distance_to_target + ( Slow_Period * final_speed - final_speed + max_speed)/ Slow_Period;
+    }
   }
   int_speed = (int)speed;
 
@@ -1352,6 +1366,7 @@ void point_arrive(){
   point_tracer_flag = 1;
   first_time_controler = 1;
   line_control_flag_first = 1;
+  uprintf(CMD_USART,"\r\nArrived !! \r\n");
 }
 
 /**【核心函数】 point_tracer,跑点函数
@@ -1370,10 +1385,11 @@ int point_tracer (float start_x , float start_y ,float point_x , float point_y ,
   float distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
   if( point_tracer_flag == 1 && distance >= ARRIVE_DISTANCE ) //可以开始跑点，并且未到达目标点
   { 
-    toward_angle = point_tracer_angle_return(point_x , point_y);
+    //toward_angle = point_tracer_angle_return(point_x , point_y);
+    toward_angle = point_tracer_angle_return_static(start_x , start_y , point_x , point_y);
     toward_speed = speed_trapezium (point_x , point_y , start_speed , final_speed , max_speed);
     //combine_vec = vec_create(toward_speed , toward_angle);
-    line_control_vec = line_control(start_x , start_y , point_x , point_y , 400);
+    line_control_vec = line_control(start_x , start_y , point_x , point_y , 700);
     combine_vec = speed_vec_add( vec_create(toward_speed , toward_angle) , line_control_vec);
     //chassis_update();
     chassis_gostraight_zx( (int)combine_vec.x , combine_vec.y , 0 , 0);
@@ -1385,7 +1401,7 @@ int point_tracer (float start_x , float start_y ,float point_x , float point_y ,
 
     if(distance < ARRIVE_DISTANCE) //到达点
     {
-      chassis_gostraight_zx( 0 , combine_vec.y , chassis.angle , 0);
+      chassis_gostraight_zx( final_speed , combine_vec.y , chassis.angle , 0);
       point_arrive();
       return 1;
     }
@@ -1411,11 +1427,13 @@ void point_collection_tracer(int point_num){
   if(ENBALE_POINT_COLLECTION_TRACER == 1 && count < point_num ){
     if(count < point_num-1){
       if(count == 0){      
-        mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1] , 850);
+        //mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1] , max_speed_zx[count]);
+        mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650 , 650);
       }  
       if(count != 0){
         if(point_arrived_flag == 1){      
-          mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1], 850);
+          //mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1], max_speed_zx[count]);
+          mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650, 650);
         }
       }
     }

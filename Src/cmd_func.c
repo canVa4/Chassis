@@ -250,3 +250,10 @@ void cmd_line_control_test(int argc,char *argv[]){
   line_control_p_x = atof(argv[4]);
   line_control_p_y = atof(argv[5]);
 }
+
+void cmd_line_control_PID(int argc,char *argv[]){
+  line_control_PID.KP = atof(argv[1]);
+  line_control_PID.KI = atof(argv[2]);
+  line_control_PID.KD = atof(argv[3]);
+  uprintf(CMD_USART,"KP: %f , KI: %f , KD: %f\r\n" ,line_control_PID.KP , line_control_PID.KI , line_control_PID.KD);
+}

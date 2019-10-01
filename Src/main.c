@@ -153,20 +153,20 @@ int main(void)
             putFloat(chassis.angle);
             sendBuffer( bluetooth_package , endValuePack() );
 
-            // if(ENBALE_POINT_COLLECTION_TRACER == 1){
-            // point_collection_tracer(4);
-            // }
+            if(ENBALE_POINT_COLLECTION_TRACER == 1){
+            point_collection_tracer(31);
+            }
             
             // if(total_line_control_flag == 1){
-            //   line_control(start_point_x,start_point_y,line_control_p_x,line_control_p_y,400);
+            //   line_control(start_point_x,start_point_y,line_control_p_x,line_control_p_y,700);
             // }else {
             //   chassis_gostraight(0,0,chassis.angle,0);
             // }
-            
-             point_tracer( start_point_x , start_point_y ,point_x , point_y , start_speed , final_speed , max_speed);
-             if(point_tracer_flag == 0){
-               chassis_gostraight(0,0,chassis.angle,0);
-             }
+
+            //  point_tracer( start_point_x , start_point_y ,point_x , point_y , start_speed , final_speed , max_speed);
+            //  if(point_tracer_flag == 0){
+            //    chassis_gostraight(0,0,chassis.angle,0);
+            //  }
             
 
             // uprintf(CMD_USART,"x = %f y = %f\r\n",chassis.pos_x,chassis.pos_y);

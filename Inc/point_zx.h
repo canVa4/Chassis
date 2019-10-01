@@ -15,7 +15,7 @@ extern float zx_points_pos_x[ZX_POINTS_NUM];
 extern float zx_points_pos_y[ZX_POINTS_NUM];
 
 extern int speed_zx[ZX_POINTS_NUM + 1];
-
+extern int max_speed_zx[ZX_POINTS_NUM];
     
 #ifdef __cplusplus
 }
