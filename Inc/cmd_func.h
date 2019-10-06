@@ -53,6 +53,12 @@ extern float line_control_p_x,line_control_p_y,start_point_x,start_point_y;
 void cmd_line_control_PID(int argc,char *argv[]);
 void cmd_line_control_test(int argc,char *argv[]);
 void cmd_set_boost_slow(int argc,char *argv[]);
+
+
+
+
+extern float go_to_point_x,go_to_point_y;
+void cmd_go_to_point_for_test(int argc,char *argv[]);
 #ifdef __cplusplus
 }
 #endif

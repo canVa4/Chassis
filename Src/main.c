@@ -156,7 +156,13 @@ int main(void)
             if(ENBALE_POINT_COLLECTION_TRACER == 1){
             point_collection_tracer(31);
             }
-            
+            if(go_to_point_test_flag ==1){
+            go_to_point_for_test(go_to_point_x , go_to_point_y);
+            }
+
+            if(ENBALE_POINT_COLLECTION_TRACER ==0 && go_to_point_test_flag == 0)
+            chassis_gostraight_zx(0,0,0,0);
+
             // if(total_line_control_flag == 1){
             //   line_control(start_point_x,start_point_y,line_control_p_x,line_control_p_y,700);
             // }else {

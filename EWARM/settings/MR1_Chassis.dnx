@@ -22,7 +22,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>1974346249</Checksum>
+        <Checksum>2460574862</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -126,18 +126,6 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
-    <Aliases>
-        <A0>_ "C:\Users\wangyunxuan\Desktop\ROBOT比赛\程序\MR1_Chassis\5272318转10走转\Src\main.c" ""</A0>
-        <A1>_ "C:\Users\徐铭远\Desktop\both_chassis\转10度\MR1_Chassis红蓝场合体\MR1_Chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c" ""</A1>
-        <A2>_ "C:\Users\徐铭远\Desktop\left\chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_can.c" ""</A2>
-        <A3>_ "C:\Users\徐铭远\Desktop\left\chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c" ""</A3>
-        <A4>_ "C:\Users\徐铭远\Desktop\left\chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c" ""</A4>
-        <A5>_ "C:\Users\徐铭远\Desktop\robot\MR1\MR1_Chassis\MR1_Chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_can.c" ""</A5>
-        <A6>_ "C:\Users\徐铭远\Desktop\robot\MR1\MR1_Chassis\MR1_Chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c" ""</A6>
-        <A7>_ "C:\Users\徐铭远\Desktop\robot\MR1\MR1_Chassis\MR1_Chassis\Src\main.c" ""</A7>
-        <Count>8</Count>
-        <SuppressDialog>1</SuppressDialog>
-    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>3</Mode>
@@ -161,11 +149,24 @@
     </DisassembleMode>
     <Breakpoints2>
         <Bp0>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Src\main.c}.1.1" 0 0 1 "" 0 "" 0</Bp0>
-        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Src\cmd_func.c}.246.3" 0 0 1 "" 0 "" 0</Bp1>
+        <Bp1>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Src\cmd_func.c}.248.3" 0 0 1 "" 0 "" 0</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Src\chassis.c}.2.1" 0 0 1 "" 0 "" 0</Bp2>
         <Bp3>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Src\chassis.c}.2.1" 0 0 1 "" 0 "" 0</Bp3>
         <Bp4>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Src\chassis.c}.2.1" 0 0 1 "" 0 "" 0</Bp4>
         <Bp5>_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\Src\chassis.c}.2.1" 0 0 1 "" 0 "" 0</Bp5>
-        <Count>6</Count>
+        <Bp6>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Src\chassis.c}.1499.5" 0 0 1 "" 0 "" 0</Bp6>
+        <Count>7</Count>
     </Breakpoints2>
+    <Aliases>
+        <A0>_ "C:\Users\wangyunxuan\Desktop\ROBOT比赛\程序\MR1_Chassis\5272318转10走转\Src\main.c" ""</A0>
+        <A1>_ "C:\Users\徐铭远\Desktop\both_chassis\转10度\MR1_Chassis红蓝场合体\MR1_Chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c" ""</A1>
+        <A2>_ "C:\Users\徐铭远\Desktop\left\chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_can.c" ""</A2>
+        <A3>_ "C:\Users\徐铭远\Desktop\left\chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c" ""</A3>
+        <A4>_ "C:\Users\徐铭远\Desktop\left\chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c" ""</A4>
+        <A5>_ "C:\Users\徐铭远\Desktop\robot\MR1\MR1_Chassis\MR1_Chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_can.c" ""</A5>
+        <A6>_ "C:\Users\徐铭远\Desktop\robot\MR1\MR1_Chassis\MR1_Chassis\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c" ""</A6>
+        <A7>_ "C:\Users\徐铭远\Desktop\robot\MR1\MR1_Chassis\MR1_Chassis\Src\main.c" ""</A7>
+        <Count>8</Count>
+        <SuppressDialog>1</SuppressDialog>
+    </Aliases>
 </settings>

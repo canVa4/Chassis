@@ -1173,9 +1173,14 @@ vec speed_vec_add(vec vec1 , vec vec2){
   return vec_create(speed,angle);
 }
 
+vec speed_vec_mul(vec *vec1 ,float k){
+  vec1->x = vec1->x * k;
+  return vec_create(vec1->x , vec1->y);
+}
+
 /*line_control函数中的PID*/
 PID_Struct_zx line_control_PID = {
-3000,   //kp
+5000,   //kp
 0,      //Ki
 50,      //Kd
 0,      //i （中间变量）
@@ -1228,12 +1233,11 @@ vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed
     if(target_speed <= -max_speed) target_speed = -max_speed;
   
     // what's beneath is the test progarm
-     uprintf(CMD_USART , "speed : %f , angle : %f\r\n" , target_speed , target_angle);
+     uprintf(CMD_USART , "error_vertical : %f , speed : %f , angle : %f\r\n" ,error_vertical , target_speed , target_angle);
      chassis_gostraight_zx( (int)target_speed , target_angle , 0 , 0);
   }
   return vec_create(target_speed , target_angle);
 }
-
 
 
 /**根据目标点更新新的速度方向
@@ -1349,7 +1353,7 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
   else if(int_speed <= 0) 
     int_speed = 0;
 
-  uprintf(CMD_USART,"speed : %d  " , int_speed);
+  //uprintf(CMD_USART,"speed : %d  " , int_speed);
   return int_speed;
 }
 
@@ -1366,7 +1370,8 @@ void point_arrive(){
   point_tracer_flag = 1;
   first_time_controler = 1;
   line_control_flag_first = 1;
-  uprintf(CMD_USART,"\r\nArrived !! \r\n");
+  point_retrack_first_ref_flat = 1;  
+  uprintf(CMD_USART,"\r\nArrived !!%d \r\n",count);
 }
 
 /**【核心函数】 point_tracer,跑点函数
@@ -1388,8 +1393,11 @@ int point_tracer (float start_x , float start_y ,float point_x , float point_y ,
     //toward_angle = point_tracer_angle_return(point_x , point_y);
     toward_angle = point_tracer_angle_return_static(start_x , start_y , point_x , point_y);
     toward_speed = speed_trapezium (point_x , point_y , start_speed , final_speed , max_speed);
+    
     //combine_vec = vec_create(toward_speed , toward_angle);
     line_control_vec = line_control(start_x , start_y , point_x , point_y , 700);
+    float k1 = line_control_vec.x /750;
+    speed_vec_mul( &line_control_vec , 1+ k1);
     combine_vec = speed_vec_add( vec_create(toward_speed , toward_angle) , line_control_vec);
     //chassis_update();
     chassis_gostraight_zx( (int)combine_vec.x , combine_vec.y , 0 , 0);
@@ -1397,15 +1405,15 @@ int point_tracer (float start_x , float start_y ,float point_x , float point_y ,
   }
   else {
     if(point_tracer_flag != 1) //不可跑点
-     return -1;
+    return -1;
 
     if(distance < ARRIVE_DISTANCE) //到达点
     {
-      chassis_gostraight_zx( final_speed , combine_vec.y , chassis.angle , 0);
+      chassis_gostraight_zx( final_speed , combine_vec.y , 0 , 0);
       point_arrive();
       return 1;
     }
-    //chassis_gostraight_zx(0 , angle , chassis.angle , 0);
+    
   }
   return -1;
 }
@@ -1422,25 +1430,46 @@ int ENBALE_POINT_COLLECTION_TRACER = 0;
 int count = 0;
 int point_count_control_flag = 0;
 
+int point_retrack_first_ref_flat = 1;
+int point_retrack(float start_x ,float start_y , float final_X , float final_y){
+  static float total_distance;
+  float distance_now;
+  if(point_retrack_first_ref_flat == 1){
+    total_distance = sqrtf( (final_X - start_x)*(final_X - start_x) + (final_y - start_y)*(final_y - start_y) );
+    point_retrack_first_ref_flat = 0;
+    return 1;
+  }
+  distance_now = sqrtf( (chassis.pos_x - start_x)*(chassis.pos_x - start_x) + (chassis.pos_y - start_y)*(chassis.pos_y - start_y) );
+  if(distance_now > total_distance + ARRIVE_DISTANCE*1.5) 
+  {
+    count++;
+    point_retrack_first_ref_flat = 0;
+    return 0;
+  }
+  else return 1;
+}
+
 void point_collection_tracer(int point_num){
   int mid_control = 0;
   if(ENBALE_POINT_COLLECTION_TRACER == 1 && count < point_num ){
     if(count < point_num-1){
       if(count == 0){      
         //mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1] , max_speed_zx[count]);
-        mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650 , 650);
+        mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650 , 500);
+        //point_retrack(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1]);
       }  
       if(count != 0){
         if(point_arrived_flag == 1){      
           //mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1], max_speed_zx[count]);
-          mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650, 650);
+          mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650, 500);
+          //point_retrack(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1]);
         }
       }
     }
     else{   //count == point_num-1
       mid_control = point_tracer(zx_points_pos_x[count-1],zx_points_pos_y[count-1],zx_points_pos_x[count] ,zx_points_pos_y[count], 150 , 0 , 200);
+      //point_retrack(zx_points_pos_x[count-1],zx_points_pos_y[count-1],zx_points_pos_x[count] ,zx_points_pos_y[count]);
     }
-
     /* 以下为count++的控制 */
     if(mid_control == 1){
       point_count_control_flag ++;
@@ -1449,13 +1478,49 @@ void point_collection_tracer(int point_num){
     if(point_count_control_flag == 1){
       count++;
     }
-
   }
   
   if(count >= point_num){
     count = 0;
+    chassis_gostraight_zx(0,0,chassis.angle,0);
     ENBALE_POINT_COLLECTION_TRACER = 0;
     uprintf(CMD_USART , "END TRACER !");
   }
 }
 
+int go_to_point_test_flag = 0;
+void go_to_point_for_test(float point_x , float point_y){
+  float toward_angle,toward_speed;
+  float distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
+  if( go_to_point_test_flag == 1 && distance >= ARRIVE_DISTANCE ) //可以开始跑点，并且未到达目标点
+  { 
+    toward_angle = point_tracer_angle_return(point_x , point_y);
+    
+    toward_speed = speed_trapezium (point_x , point_y , 125 , 50 , 850);
+    combine_vec = vec_create(toward_speed , toward_angle);
+    //chassis_update();
+    chassis_gostraight_zx( (int)combine_vec.x , combine_vec.y , 0 , 0);
+    return;
+  }
+  else {
+    if(go_to_point_test_flag != 1){ //不可跑点
+      chassis_gostraight_zx( 0 , combine_vec.y , chassis.angle , 0);
+      return;
+    }
+    if(distance < ARRIVE_DISTANCE) //到达点
+    {
+      //chassis_gostraight_zx( 50 , combine_vec.y , 0 , 0);
+      //point_arrived_flag = 1;
+      //point_tracer_flag = 1;
+      first_time_controler = 1;
+      go_to_point_test_flag = 0;
+      //go_to_point_test_flag = 1;
+      //point_retrack_first_ref_flat = 1;  
+      uprintf(CMD_USART,"\r\ngo_point_arrived %f,%f\r\n",chassis.pos_x , chassis.pos_y);
+      chassis_gostraight_zx(0 , 0 , 0 , 0);
+      return;
+    }
+    
+  }
+  return;
+}

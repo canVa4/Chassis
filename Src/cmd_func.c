@@ -200,6 +200,8 @@ void stop_flag(int argc,char *argv[]){
   point_tracer_flag = atoi(argv[1]);
   first_time_controler = 1;
   if(point_tracer_flag == 0){
+    count = 0;
+    ENBALE_POINT_COLLECTION_TRACER = 0;
     chassis_gostraight(0,0,chassis.angle,0);
   }
   //point_x = atof(argv[2]);
@@ -256,4 +258,17 @@ void cmd_line_control_PID(int argc,char *argv[]){
   line_control_PID.KI = atof(argv[2]);
   line_control_PID.KD = atof(argv[3]);
   uprintf(CMD_USART,"KP: %f , KI: %f , KD: %f\r\n" ,line_control_PID.KP , line_control_PID.KI , line_control_PID.KD);
+}
+
+float go_to_point_x = 0,go_to_point_y = 0;
+void cmd_go_to_point_for_test(int argc,char *argv[]){
+  go_to_point_test_flag = atoi(argv[1]);
+  go_to_point_x = atof(argv[2]);
+  go_to_point_y = atof(argv[3]);
+  if(go_to_point_test_flag==0){
+    chassis_gostraight_zx( 0 , 0 , 0 , 0);
+    uprintf(CMD_USART , "stop!now\r\n");
+  }else{
+    uprintf(CMD_USART , "go to : %f , %f\r\n",go_to_point_x ,go_to_point_y);
+  }
 }

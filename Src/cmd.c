@@ -45,7 +45,8 @@ static cmd_struct cmd_tbl[] = {
     CMD_ADD("collect_tracer","by zx",cmd_point_collection_tracer),
     CMD_ADD("set_period","by zx",cmd_set_boost_slow),
     CMD_ADD("line_control","by zx",cmd_line_control_test),
-    CMD_ADD("line_PID","by zx",cmd_line_control_PID)
+    CMD_ADD("line_PID","by zx",cmd_line_control_PID),
+    CMD_ADD("go_to","by zx",cmd_go_to_point_for_test)
 };
 char cmd_line[MAX_CMD_LINE_LENGTH + 1];
 char *cmd_argv[MAX_ARGC];  // zx: ´æ²ÎÊýµÄ
