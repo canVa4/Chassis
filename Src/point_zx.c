@@ -1,11 +1,11 @@
 #include "point_zx.h"
 
+
+float zx_points_pos_x[ZX_POINTS_NUM]={0 , 1 , 0};
+float zx_points_pos_y[ZX_POINTS_NUM]={0 , 2 , 3};
+
+
 /*
-float zx_points_pos_x[ZX_POINTS_NUM]={0 , 0.2 ,0.2 ,0};
-float zx_points_pos_y[ZX_POINTS_NUM]={0 , 0 ,0.2 ,0.2};
-*/
-
-
 float zx_points_pos_x[ZX_POINTS_NUM]={
 0.000000, 0.190000, 0.360000, 0.510000, 
 
@@ -71,3 +71,4 @@ int max_speed_zx[ZX_POINTS_NUM] = { 319,319,375,425,
 508,470,425,375,
 
 319,282};
+*/

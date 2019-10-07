@@ -202,6 +202,7 @@ void stop_flag(int argc,char *argv[]){
   if(point_tracer_flag == 0){
     count = 0;
     ENBALE_POINT_COLLECTION_TRACER = 0;
+    state_reset();
     chassis_gostraight(0,0,chassis.angle,0);
   }
   //point_x = atof(argv[2]);
@@ -234,6 +235,7 @@ void cmd_point_collection_tracer(int argc,char *argv[]){
   ENBALE_POINT_COLLECTION_TRACER = atoi(argv[1]);
   if(ENBALE_POINT_COLLECTION_TRACER == 0){
     chassis_gostraight(0,0,chassis.angle,0);
+    state_reset();
   }
 }
 

@@ -237,11 +237,12 @@ extern float Boost_Period ;
 extern float Slow_Period ;
 
 extern int count;
-extern int point_retrack_first_ref_flat;
+extern int point_retrack_first_ref_flag;
 
+void state_reset();
 
 void chassis_gostraight_zx(int speed , float angle, float turn, int is_handle);
-extern int go_to_point_test_flag ;
+extern int go_to_point_test_flag;
 void go_to_point_for_test(float point_x , float point_y);
 #ifdef __cplusplus
 }

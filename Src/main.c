@@ -154,7 +154,7 @@ int main(void)
             sendBuffer( bluetooth_package , endValuePack() );
 
             if(ENBALE_POINT_COLLECTION_TRACER == 1){
-            point_collection_tracer(31);
+            point_collection_tracer(3);
             }
             if(go_to_point_test_flag ==1){
             go_to_point_for_test(go_to_point_x , go_to_point_y);

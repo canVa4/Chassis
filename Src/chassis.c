@@ -1326,7 +1326,7 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
   if(distance_to_target >=  1) distance_to_target = 1;
   if(distance_to_target <=  0) distance_to_target = 0;
 
-  if(origin_distance <= 1) //如果距离小于20cm不进行梯形速度规划 使用从起始速度到最终速度的直接线性规划（一条连接起始速度和最终速度的直线）
+  if(origin_distance <= 0.5) //如果距离小于50cm不进行梯形速度规划 使用从起始速度到最终速度的直接线性规划（一条连接起始速度和最终速度的直线）
   {
     speed = (final_speed - start_speed)*distance_to_target + start_speed;
   }
@@ -1359,7 +1359,7 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
 
 int point_tracer_flag = 0;  //为1时：可以执行point_tracer；为0时：禁用point_tracer PS:此变量主要为调试时方便控制
 int point_arrived_flag = 0; //到达点后为1
-/**到达点后，将各种flag置位
+/**到达点后，将各种flag置位(重置至跑点前的状态)
 *参数：void
 *返回值： void
 *说明: 为point_tracer内部函数，配合point_tracer使用
@@ -1370,7 +1370,7 @@ void point_arrive(){
   point_tracer_flag = 1;
   first_time_controler = 1;
   line_control_flag_first = 1;
-  point_retrack_first_ref_flat = 1;  
+  point_retrack_first_ref_flag = 1;  
   uprintf(CMD_USART,"\r\nArrived !!%d \r\n",count);
 }
 
@@ -1396,8 +1396,8 @@ int point_tracer (float start_x , float start_y ,float point_x , float point_y ,
     
     //combine_vec = vec_create(toward_speed , toward_angle);
     line_control_vec = line_control(start_x , start_y , point_x , point_y , 700);
-    float k1 = line_control_vec.x /750;
-    speed_vec_mul( &line_control_vec , 1+ k1);
+    //float k1 = toward_speed /1500;
+    speed_vec_mul( &line_control_vec , 1 /*+ k1*/);
     combine_vec = speed_vec_add( vec_create(toward_speed , toward_angle) , line_control_vec);
     //chassis_update();
     chassis_gostraight_zx( (int)combine_vec.x , combine_vec.y , 0 , 0);
@@ -1430,20 +1430,20 @@ int ENBALE_POINT_COLLECTION_TRACER = 0;
 int count = 0;
 int point_count_control_flag = 0;
 
-int point_retrack_first_ref_flat = 1;
+int point_retrack_first_ref_flag = 1;
 int point_retrack(float start_x ,float start_y , float final_X , float final_y){
   static float total_distance;
   float distance_now;
-  if(point_retrack_first_ref_flat == 1){
+  if(point_retrack_first_ref_flag == 1){
     total_distance = sqrtf( (final_X - start_x)*(final_X - start_x) + (final_y - start_y)*(final_y - start_y) );
-    point_retrack_first_ref_flat = 0;
+    point_retrack_first_ref_flag = 0;
     return 1;
   }
   distance_now = sqrtf( (chassis.pos_x - start_x)*(chassis.pos_x - start_x) + (chassis.pos_y - start_y)*(chassis.pos_y - start_y) );
   if(distance_now > total_distance + ARRIVE_DISTANCE*1.5) 
   {
     count++;
-    point_retrack_first_ref_flat = 0;
+    point_retrack_first_ref_flag = 0;
     return 0;
   }
   else return 1;
@@ -1472,7 +1472,9 @@ void point_collection_tracer(int point_num){
     }
     /* 以下为count++的控制 */
     if(mid_control == 1){
-      point_count_control_flag ++;
+      if(point_count_control_flag<=2){    //防止数值加的过大（实际上只需要加一次）
+      point_count_control_flag ++;    
+      }
     }
     else point_count_control_flag = 0;
     if(point_count_control_flag == 1){
@@ -1515,7 +1517,7 @@ void go_to_point_for_test(float point_x , float point_y){
       first_time_controler = 1;
       go_to_point_test_flag = 0;
       //go_to_point_test_flag = 1;
-      //point_retrack_first_ref_flat = 1;  
+      //point_retrack_first_ref_flag = 1;  
       uprintf(CMD_USART,"\r\ngo_point_arrived %f,%f\r\n",chassis.pos_x , chassis.pos_y);
       chassis_gostraight_zx(0 , 0 , 0 , 0);
       return;
@@ -1523,4 +1525,17 @@ void go_to_point_for_test(float point_x , float point_y){
     
   }
   return;
+}
+
+void state_reset(){
+  count = 0;    //跑点集计数清零
+  point_count_control_flag = 0;   //控制count++的变量
+  ENBALE_POINT_COLLECTION_TRACER = 0;   //禁止跑点
+  point_tracer_flag = 0;    //禁用point_tracer
+  //以下逻辑等同于point_arrive 
+  point_arrived_flag = 0;
+  point_tracer_flag = 0;
+  first_time_controler = 1;
+  line_control_flag_first = 1;
+  point_retrack_first_ref_flag = 1;
 }
