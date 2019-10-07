@@ -1,24 +1,24 @@
 #include "chassis.h"
 #include "stmflash.h"
 
-/***********¸ü»»ºìÀ¶³¡*********************/
+/***********æ›´æ¢çº¢è“åœº*********************/
 int chassis_arena = LEFT_ARENA;
 /***********here*********************/
 Chassis chassis;
 CHASSIS_SIGNAL ChassisSignal;
 CHASSIS_HANDLE ChassisHandle;
-//ÈıÂÖÓëÈ«³¡¶¨Î»Ä£¿é°²×°Æ«½Ç
+//ä¸‰è½®ä¸å…¨åœºå®šä½æ¨¡å—å®‰è£…åè§’
 float catch_bone_modify_x = 0;
 float catch_bone_modify_y = 0;
 float ERR_angle_m3 = -PI/3 , ERR_angle_m1 = -PI/3 + 1*2*PI/3 , ERR_angle_m0 = -PI/3 + 2*2*PI/3 ;
-int chassis_poscnt = 0;//µã¼ÆÊı
-//ÇúÏß¿ªÊ¼±êÖ¾Î»
-float param_a = 4000, param_b = 3.5;  //aÔ½´ó£¬¼ÓËÙÉÏÏŞÔ½´ó£¬ bÔ½´ó£¬¼ÓËÙÔ½Âı 
-//ÇúÏßÖĞÄ³Ò»¸öµã¾àÀë¿ªÍ·ºÍ½áÎ²µÄ¾àÀëÊı×é
+int chassis_poscnt = 0;//ç‚¹è®¡æ•°
+//æ›²çº¿å¼€å§‹æ ‡å¿—ä½
+float param_a = 4000, param_b = 3.5;  //aè¶Šå¤§ï¼ŒåŠ é€Ÿä¸Šé™è¶Šå¤§ï¼Œ bè¶Šå¤§ï¼ŒåŠ é€Ÿè¶Šæ…¢ 
+//æ›²çº¿ä¸­æŸä¸€ä¸ªç‚¹è·ç¦»å¼€å¤´å’Œç»“å°¾çš„è·ç¦»æ•°ç»„
 float chassis_dis_to_bgn[NUM_POINTS];
 float chassis_dis_to_end[NUM_POINTS];
 
-//µ×ÅÌ×Ô×ªpid²ÎÊı
+//åº•ç›˜è‡ªè½¬pidå‚æ•°
 float chassis_turn_angle_KP = -1000;
 float chassis_turn_angle_KD = 0;
 
@@ -39,7 +39,7 @@ float scope_path = 0.06;
 
 float slow_turn_angle = PI/6;
 
-float chassis_speed_max = 500;//ÊÖ±ú×î´óËÙ¶È
+float chassis_speed_max = 500;//æ‰‹æŸ„æœ€å¤§é€Ÿåº¦
 int chassis_posnum = 1;
 
 int rocker_x = 0;
@@ -67,9 +67,9 @@ extern int main_flag;
 int micro_switch_test_flag = 0;
 //int track_finish_flag = 0;
 //int four_feet_ok = 0;
-/**µ×ÅÌ³õÊ¼»¯
-*²ÎÊı£ºÎŞ
-*·µ»ØÖµ£º ÎŞ
+/**åº•ç›˜åˆå§‹åŒ–
+*å‚æ•°ï¼šæ— 
+*è¿”å›å€¼ï¼š æ— 
 */
 void chassis_zero()
 {
@@ -164,7 +164,7 @@ void chassis_init(void)
     */
 }
 
-//¼ÆËã¾àÀë
+//è®¡ç®—è·ç¦»
 void chassis_calculate_dis_matrix()
 {
     double lastdis = 0;
@@ -189,9 +189,9 @@ void chassis_calculate_dis_matrix()
         lastdis = chassis_dis_to_end[i];
     }
 }
-/*ËÙ¶ÈÇúÏß¼ÆËã
-´«Èëµ½ÏÂÒ»¸öµãµÄÊµ¼Ê¾àÀë
-·µ»Ø´Ë¿ÌËÙ¶ÈÖµ
+/*é€Ÿåº¦æ›²çº¿è®¡ç®—
+ä¼ å…¥åˆ°ä¸‹ä¸€ä¸ªç‚¹çš„å®é™…è·ç¦»
+è¿”å›æ­¤åˆ»é€Ÿåº¦å€¼
 */
 int chassis_calculate_speed(double dis_to_nextpos)
 {
@@ -221,9 +221,9 @@ int chassis_calculate_speed(double dis_to_nextpos)
     return (int)speed;
 }
 
-/**µ×ÅÌÖØÉè×ø±ê
-*²ÎÊı£ºÎŞ
-*·µ»ØÖµ£º ÎŞ
+/**åº•ç›˜é‡è®¾åæ ‡
+*å‚æ•°ï¼šæ— 
+*è¿”å›å€¼ï¼š æ— 
 */
 float action_init_posx = 0;
 float action_init_posy = 0;
@@ -234,9 +234,9 @@ void chassis_init_pos(float x,float y)
     action_init_posy += y - chassis.pos_y;
 }
 
-/**µ×ÅÌ¸üĞÂ×ø±ê
-*²ÎÊı£ºÎŞ
-*·µ»ØÖµ£º ÎŞ
+/**åº•ç›˜æ›´æ–°åæ ‡
+*å‚æ•°ï¼šæ— 
+*è¿”å›å€¼ï¼š æ— 
 */
 void chassis_update(void)
 { 
@@ -244,14 +244,14 @@ void chassis_update(void)
     chassis.pos_x = chassis.g_vega_pos_x/1000 + action_init_posx;
     chassis.pos_y = chassis.g_vega_pos_y/1000 + action_init_posy;
     chassis.speed_x = (chassis.pos_x - chassis.last_pos_x) / 0.005;
-    chassis.speed_y = (chassis.pos_y - chassis.last_pos_y) / 0.005;//³ıÊ±¼ä m/s
+    chassis.speed_y = (chassis.pos_y - chassis.last_pos_y) / 0.005;//é™¤æ—¶é—´ m/s
     chassis.last_pos_x = chassis.pos_x;
     chassis.last_pos_y = chassis.pos_y;
     chassis.now_speed = vec_model(vec_create(chassis.speed_x,chassis.speed_y));
 }
 
 /*
-½Ç¶È¼õ·¨º¯Êı
+è§’åº¦å‡æ³•å‡½æ•°
 */
 float chassis_angle_subtract(float a, float b)
 {
@@ -268,7 +268,7 @@ float chassis_angle_subtract(float a, float b)
 }
 
 /*
-½Ç¶Èpid¿ØÖÆ
+è§’åº¦pidæ§åˆ¶
 */
 float chassis_PID_Angle_Control(float target_angle){
     
@@ -280,12 +280,12 @@ float chassis_PID_Angle_Control(float target_angle){
     return P_out + D_out;
 }
 
-/**µ×ÅÌÇı¶¯
-*²ÎÊı£ºfloat angle 	·½Ïò½Ç
-*      int   speed    ËÙ¶È
-float turn  ×Ô×ª·½Î»½Ç
-*·µ»ØÖµ£º ÎŞ
-*ËµÃ÷:
+/**åº•ç›˜é©±åŠ¨
+*å‚æ•°ï¼šfloat angle 	æ–¹å‘è§’
+*      int   speed    é€Ÿåº¦
+float turn  è‡ªè½¬æ–¹ä½è§’
+*è¿”å›å€¼ï¼š æ— 
+*è¯´æ˜:
 */
 void chassis_gostraight(int speed , float angle, float turn, int is_handle)
 {
@@ -296,13 +296,13 @@ void chassis_gostraight(int speed , float angle, float turn, int is_handle)
     float turn_output = 0;
     if(is_handle)
     {
-        turn_output = -turn;//È«³¡¶¨Î»·½Ïò»·  
+        turn_output = -turn;//å…¨åœºå®šä½æ–¹å‘ç¯  
     }
     else
     {
         turn_output = chassis_PID_Angle_Control(turn);
     }
-    if(turn_output >200)//ÍÓÂİÒÇ½Ç¶ÈPID
+    if(turn_output >200)//é™€èºä»ªè§’åº¦PID
     {
         turn_output = 200;
     }
@@ -327,13 +327,13 @@ void chassis_gostraight_zx(int speed , float angle, float turn, int is_handle)
     float turn_output = 0;
     if(is_handle)
     {
-        turn_output = -turn;//È«³¡¶¨Î»·½Ïò»·  
+        turn_output = -turn;//å…¨åœºå®šä½æ–¹å‘ç¯  
     }
     else
     {
         turn_output = chassis_PID_Angle_Control(turn);
     }
-    if(turn_output >350)//ÍÓÂİÒÇ½Ç¶ÈPID
+    if(turn_output >350)//é™€èºä»ªè§’åº¦PID
     {
         turn_output = 350;
     }
@@ -440,9 +440,9 @@ void chassis_go_track(CHASSIS_DRIVE_MODE theMode, CHASSIS_SPEED_MODE theSpeedMod
 {
     double dis_to_next = 0;
     int prenum = chassis_posnum - chassis_poscnt;
-    if(prenum > 10) prenum = 10;//´Ë´¦¸ü¸ÄÔ¤ÏÈÅĞ¶ÏµÄµãµÄ×î´óÊıÁ¿
+    if(prenum > 10) prenum = 10;//æ­¤å¤„æ›´æ”¹é¢„å…ˆåˆ¤æ–­çš„ç‚¹çš„æœ€å¤§æ•°é‡
     int i;
-    for(i = prenum - 1; i >= 0; i--)//´ÓÔ¶Íù½üÅĞ¶Ï
+    for(i = prenum - 1; i >= 0; i--)//ä»è¿œå¾€è¿‘åˆ¤æ–­
     {
         double deltaX = 0, deltaY = 0;
           if(ChassisSignal.m_CtrlFlag._routeflag == 1)
@@ -481,7 +481,7 @@ void chassis_go_track(CHASSIS_DRIVE_MODE theMode, CHASSIS_SPEED_MODE theSpeedMod
         int arriveJudge = 0;
         if(theMode == _FIXED_TRACK_MODE)
         {
-            if(chassis.g_ispeed >= 700)///¶¯Ì¬scope
+            if(chassis.g_ispeed >= 700)///åŠ¨æ€scope
             {
                 scope_path = 0.16;
             }else
@@ -491,13 +491,13 @@ void chassis_go_track(CHASSIS_DRIVE_MODE theMode, CHASSIS_SPEED_MODE theSpeedMod
             arriveJudge = (dis_to_next <= 0.03 && ( chassis_poscnt + i >= chassis_posnum - 2)) 
                 || (dis_to_next <= scope_path && chassis_poscnt + i >= 0 && chassis_poscnt + i < chassis_posnum - 2);
         }
-        if(arriveJudge)//ÅĞ¶Ï¾­¹ı´Ëµã 
+        if(arriveJudge)//åˆ¤æ–­ç»è¿‡æ­¤ç‚¹ 
         {
             chassis_poscnt += i + 1;
-            //uprintf(CMD_USART,"µ½´ï chassis_poscnt = %d  angle = %f\r\n",chassis_poscnt,chassis.g_fangle*180/PI);
-            if(chassis_poscnt >= chassis_posnum - 1)//µ½´ïÄ¿µÄµØ
+            //uprintf(CMD_USART,"åˆ°è¾¾ chassis_poscnt = %d  angle = %f\r\n",chassis_poscnt,chassis.g_fangle*180/PI);
+            if(chassis_poscnt >= chassis_posnum - 1)//åˆ°è¾¾ç›®çš„åœ°
             {
-                //uprintf(CMD_USART,"µ½´ïÖÕµã chassis_poscnt = %d\r\n",chassis_poscnt);
+                //uprintf(CMD_USART,"åˆ°è¾¾ç»ˆç‚¹ chassis_poscnt = %d\r\n",chassis_poscnt);
                 chassis.g_ispeed = 0;
                 chassis.g_fangle = 0;
                 
@@ -569,7 +569,7 @@ void chassis_pid_test()
     {
         chassis.g_ispeed = 0;
     }
-    /*float now_angle = atan2(target_y - chassis.pos_y,target_x - chassis.pos_x);//µãµã·½Ïò
+    /*float now_angle = atan2(target_y - chassis.pos_y,target_x - chassis.pos_x);//ç‚¹ç‚¹æ–¹å‘
     float target_angle = atan2(target_y - last_y,target_x - last_x);
     float tmp_g_fangle = PID_Release(&chassis_PID,target_angle,now_angle);
     if(tmp_g_fangle > PI/2) tmp_g_fangle = PI/2;
@@ -591,7 +591,7 @@ void chassis_exe()
     }
     slow_turn_func();
     absolute_slow_turn_thread();
-    chassis_gostraight(chassis.g_ispeed ,chassis.g_fangle, chassis.g_fturn, ChassisSignal.m_CtrlFlag._handle_flag); //·ÅÔÚÉÏÃæµÄÀ¨ºÅÀïÁË
+    chassis_gostraight(chassis.g_ispeed ,chassis.g_fangle, chassis.g_fturn, ChassisSignal.m_CtrlFlag._handle_flag); //æ”¾åœ¨ä¸Šé¢çš„æ‹¬å·é‡Œäº†
 }
 
 int open_box1()
@@ -725,7 +725,7 @@ void chassis_automata()
       {
         ChassisSignal.m_FinishFlag._delay_flag = 0;
         ChassisSignal.m_CtrlFlag._handle_flag = 0;
-        //chassis.g_fturn = 0;//·ÀÖ¹·½Ïò»·Í»±ä 
+        //chassis.g_fturn = 0;//é˜²æ­¢æ–¹å‘ç¯çªå˜ 
         chassis_update();
            if(chassis_arena == LEFT_ARENA)
             slow_turn = -slow_turn_angle;
@@ -772,7 +772,7 @@ void chassis_automata()
         if(open_box2() == 1)
         {
             open_box = 1;
-            //uprintf(CMD_USART, "¿ªÏä2\r\n");
+            //uprintf(CMD_USART, "å¼€ç®±2\r\n");
             delay_num_const = 1000;
             Chassis_State = 29;
         }
@@ -782,7 +782,7 @@ void chassis_automata()
       {
         ChassisSignal.m_FinishFlag._delay_flag = 0;
         ChassisSignal.m_CtrlFlag._handle_flag = 0;
-        //chassis.g_fturn = 0;//·ÀÖ¹·½Ïò»·Í»±ä 
+        //chassis.g_fturn = 0;//é˜²æ­¢æ–¹å‘ç¯çªå˜ 
         chassis_update();
         chassis_poscnt = 0;
            if(chassis_arena == LEFT_ARENA)
@@ -840,8 +840,8 @@ void chassis_automata()
 }
 
 
-//ÊÖ±úcanµÄ°´¼üidÊÇ325£¨10£©
-//´Ëº¯Êı½ÓÊÕcan·¢À´µÄÏûÏ¢
+//æ‰‹æŸ„cançš„æŒ‰é”®idæ˜¯325ï¼ˆ10ï¼‰
+//æ­¤å‡½æ•°æ¥æ”¶canå‘æ¥çš„æ¶ˆæ¯
 void chassis_handle(CanRxMsgTypeDef* pRxMsg)
 {
     if(0 == main_flag) return;
@@ -868,13 +868,13 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
     {
         switch(id)
         {
-            //²¦Âë¿ª¹Øµ½00
+            //æ‹¨ç å¼€å…³åˆ°00
           case 0:
             ChassisSignal.m_CtrlFlag._handle_flag = 1;
             ChassisSignal.m_CtrlFlag._routeflag = 0;
             Chassis_State = 0;
             if(chassis_speed_max < 600) chassis_speed_max = 600;
-            chassis_speed_max += 100;//Ôö¼Ó×î´óËÙ¶È
+            chassis_speed_max += 100;//å¢åŠ æœ€å¤§é€Ÿåº¦
             if(chassis_speed_max >= 2000)
                 chassis_speed_max = 2000;
             break;
@@ -893,9 +893,9 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
             }
             ChassisSignal.m_CtrlFlag._handle_flag = 0;
             ChassisSignal.m_CtrlFlag._routeflag = 1;
-            //modify_x = ORIGIN_X - (chassis.pos_x - modify_x);//ĞŞ¸ÄÈ«³¡¶¨Î»³õÊ¼Öµ
+            //modify_x = ORIGIN_X - (chassis.pos_x - modify_x);//ä¿®æ”¹å…¨åœºå®šä½åˆå§‹å€¼
             //modify_y = ORIGIN_Y - (chassis.pos_y - modify_y);
-            chassis.g_fturn = chassis.angle;//·ÀÖ¹·½Ïò»·Í»±ä 
+            chassis.g_fturn = chassis.angle;//é˜²æ­¢æ–¹å‘ç¯çªå˜ 
             chassis_update();
             //chassis_modify_pos(chassis_xpos,chassis_ypos,ORIGIN_X,ORIGIN_Y);
             chassis_poscnt = 0;
@@ -915,9 +915,9 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
             Chassis_State = 2;
             break;
           case 9:
-            upper_flag = 8;//Í¶ÖÀºó¸´Ô­
+            upper_flag = 8;//æŠ•æ·åå¤åŸ
             break;
-            //²¦Âë01
+            //æ‹¨ç 01
           case 10:
             ChassisSignal.m_CtrlFlag._handle_flag = 0;
             
@@ -951,7 +951,7 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
             Chassis_State = 3;
             break;
             
-            //²¦Âë10
+            //æ‹¨ç 10
           case 23:
             if(micro_switch_test_flag == 1)
                 micro_switch_test_flag = 0;
@@ -959,7 +959,7 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
                 micro_switch_test_flag = 1;
             break;
             
-            //²¦Âë¿ª¹Øµ½11
+            //æ‹¨ç å¼€å…³åˆ°11
           case 30:
             ChassisSignal.m_CtrlFlag._handle_flag = 1;
             ChassisSignal.m_CtrlFlag._routeflag = 0;
@@ -978,7 +978,7 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
             craw_open();
             break;
           case 33:
-            upper_flag = 200;//Í¶²»ÊÕ
+            upper_flag = 200;//æŠ•ä¸æ”¶
             break;
           case 36:
             upper_flag = 3;
@@ -997,7 +997,7 @@ void chassis_handle(CanRxMsgTypeDef* pRxMsg)
     
 }
 
-//Ò¡¸ËµÄcanµÄidÎª324
+//æ‘‡æ†çš„cançš„idä¸º324
 void chassis_rocker(CanRxMsgTypeDef* pRxMsg)
 {
     if(0 == main_flag) return;
@@ -1007,12 +1007,12 @@ void chassis_rocker(CanRxMsgTypeDef* pRxMsg)
     {
         Data[i] = pRxMsg->Data[i];
     }
-    //³£ÊıĞŞ¸ÄÁãÆ«
+    //å¸¸æ•°ä¿®æ”¹é›¶å
     ChassisHandle.ry = (int)Data[0] - 128;
     ChassisHandle.rx = (int)Data[1] - 131;
     ChassisHandle.ly = (int)Data[2] - 119;
     ChassisHandle.lx = (int)Data[3] - 125;
-    //±ä»»×ø±êÏµ
+    //å˜æ¢åæ ‡ç³»
     ChassisHandle.ry *= -1;
     ChassisHandle.ly *= -1;
 }
@@ -1042,7 +1042,7 @@ void chassis_handle_control()
       case 0:
         chassis.g_fangle = atan2(ChassisHandle.ly, ChassisHandle.rx);
         dis = sqrt(ChassisHandle.ly * ChassisHandle.ly + ChassisHandle.rx * ChassisHandle.rx);
-        chassis.g_ispeed = (int)(chassis_speed_max * dis * dis / 16384);//ËÙ¶Èµş¼Ó
+        chassis.g_ispeed = (int)(chassis_speed_max * dis * dis / 16384);//é€Ÿåº¦å åŠ 
         if(chassis.g_ispeed > chassis_speed_max) chassis.g_ispeed = (int)chassis_speed_max;
         if(chassis.g_ispeed < 0) chassis.g_ispeed = 0;
         if(ChassisHandle.btstate[8] == 1)
@@ -1053,7 +1053,7 @@ void chassis_handle_control()
       case 1:
         chassis.g_fangle = atan2(ChassisHandle.ly, ChassisHandle.lx);
         dis = sqrt(ChassisHandle.ly * ChassisHandle.ly + ChassisHandle.lx * ChassisHandle.lx);
-        chassis.g_ispeed = (int)(chassis_speed_max * dis * dis / 16384);//ËÙ¶Èµş¼Ó
+        chassis.g_ispeed = (int)(chassis_speed_max * dis * dis / 16384);//é€Ÿåº¦å åŠ 
         if(chassis.g_ispeed > chassis_speed_max) chassis.g_ispeed = (int)chassis_speed_max;
         if(chassis.g_ispeed < 0) chassis.g_ispeed = 0;
         dis2 = sqrt(ChassisHandle.ry * ChassisHandle.ry + ChassisHandle.rx * ChassisHandle.rx);
@@ -1067,7 +1067,7 @@ void chassis_handle_control()
       case 2:
         chassis.g_fangle = atan2(ChassisHandle.ly, ChassisHandle.lx) + chassis.angle;
         dis = sqrt(ChassisHandle.ly * ChassisHandle.ly + ChassisHandle.lx * ChassisHandle.lx);
-        chassis.g_ispeed = (int)(chassis_speed_max * dis * dis / 16384);//ËÙ¶Èµş¼Ó
+        chassis.g_ispeed = (int)(chassis_speed_max * dis * dis / 16384);//é€Ÿåº¦å åŠ 
         if(chassis.g_ispeed > chassis_speed_max) chassis.g_ispeed = (int)chassis_speed_max;
         if(chassis.g_ispeed < 0) chassis.g_ispeed = 0;
         
@@ -1142,7 +1142,7 @@ float chassis_angle_pid_ctrl(float target_x_next, float target_y_next)
 
 void chassis_modify_pos(float x[],float y[],float x0,float y0)
 {
-    if(chassis.angle <= 0.0017 && chassis.angle >= -0.0017)//Ğ¡ÓÚ0.1¡ã²»´¦Àí
+    if(chassis.angle <= 0.0017 && chassis.angle >= -0.0017)//å°äº0.1Â°ä¸å¤„ç†
         return;
     
     int temp_num = NUM_POINTS;
@@ -1156,11 +1156,11 @@ void chassis_modify_pos(float x[],float y[],float x0,float y0)
 
 /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
-/**ËÙ¶ÈÊ¸Á¿Ïà¼Ó£¬·µ»ØÖµÎªºÏËÙ¶ÈÊ¸Á¿
-*²ÎÊı£ºvec1ºÍvec2Îª´ıÏà¼ÓµÄÊ¸Á¿
-*·µ»ØÖµ£º ºÏËÙ¶ÈÊ¸Á¿
-*ËµÃ÷: ÓÃÓÚpoint_tracerÊ¹ÓÃ
-*×÷Õß: zx
+/**é€Ÿåº¦çŸ¢é‡ç›¸åŠ ï¼Œè¿”å›å€¼ä¸ºåˆé€Ÿåº¦çŸ¢é‡
+*å‚æ•°ï¼švec1å’Œvec2ä¸ºå¾…ç›¸åŠ çš„çŸ¢é‡
+*è¿”å›å€¼ï¼š åˆé€Ÿåº¦çŸ¢é‡
+*è¯´æ˜: ç”¨äºpoint_tracerä½¿ç”¨
+*ä½œè€…: zx
 */
 vec speed_vec_add(vec vec1 , vec vec2){
   float v1_x , v1_y , v2_x , v2_y,speed,angle;
@@ -1178,28 +1178,28 @@ vec speed_vec_mul(vec *vec1 ,float k){
   return vec_create(vec1->x , vec1->y);
 }
 
-/*line_controlº¯ÊıÖĞµÄPID*/
+/*line_controlå‡½æ•°ä¸­çš„PID*/
 PID_Struct_zx line_control_PID = {
 5000,   //kp
 0,      //Ki
 50,      //Kd
-0,      //i £¨ÖĞ¼ä±äÁ¿£©
+0,      //i ï¼ˆä¸­é—´å˜é‡ï¼‰
 0,      //last_error
 500,    //i_max
 0,      //last_d
 0.005   //I_TIME
 };
-//ÒÔÏÂ±äÁ¿Îªline_controlÄÚ²¿µ÷ÓÃ
-int total_line_control_flag = 1;    //Îª0Ê±½ûÓÃline_control£¬Îª1Ê±ÆôÓÃ
-int line_control_flag_first = 1;    //Îª1Ê±£ºÎªµÚÒ»´ÎÅÜÒ»¸öĞÂµã£¨ÉèÖÃÕâ¸öflagµÄÄ¿µÄÖ÷ÒªÎª¼õÉÙ¼ÆËã´ÎÊı£©
+//ä»¥ä¸‹å˜é‡ä¸ºline_controlå†…éƒ¨è°ƒç”¨
+int total_line_control_flag = 1;    //ä¸º0æ—¶ç¦ç”¨line_controlï¼Œä¸º1æ—¶å¯ç”¨
+int line_control_flag_first = 1;    //ä¸º1æ—¶ï¼šä¸ºç¬¬ä¸€æ¬¡è·‘ä¸€ä¸ªæ–°ç‚¹ï¼ˆè®¾ç½®è¿™ä¸ªflagçš„ç›®çš„ä¸»è¦ä¸ºå‡å°‘è®¡ç®—æ¬¡æ•°ï¼‰
 float origin_distance,origin_angle;
-/**¸ù¾İÓë¹ì¼££¨Ö±Ïß£©µÄÎó²îÉú³É¾ÀÕıµÄËÙ¶ÈÊ¸Á¿
-*²ÎÊı£ºfloat p1_x£¬p1_y µØÃæ×ø±êÏµÏÂ¿ªÊ¼µãµÄÎ»ÖÃ
-*²ÎÊı£ºfloat p2_x£¬p2_y µØÃæ×ø±êÏµÏÂ¿ªÊ¼µãµÄÎ»ÖÃ
-*²ÎÊı£ºfloat max_speed ×î´óËÙ¶È£¨ÏŞ·ùÊ¹ÓÃ£©
-*·µ»ØÖµ£º µ×ÅÌÇı¶¯µÄ·½ÏòÊ¸Á¿ vec.x ÎªËÙ¶È´óĞ¡£¬vec.yÎªËÙ¶È·½Ïò£¨·½ÏòÎª£º-PI~PI)
-*ËµÃ÷: ¾ÀÕı¹ì¼£Ê¹ÓÃ£¬ÅäºÏpoint_tracerÊ¹ÓÃ
-*×÷Õß: zx
+/**æ ¹æ®ä¸è½¨è¿¹ï¼ˆç›´çº¿ï¼‰çš„è¯¯å·®ç”Ÿæˆçº æ­£çš„é€Ÿåº¦çŸ¢é‡
+*å‚æ•°ï¼šfloat p1_xï¼Œp1_y åœ°é¢åæ ‡ç³»ä¸‹å¼€å§‹ç‚¹çš„ä½ç½®
+*å‚æ•°ï¼šfloat p2_xï¼Œp2_y åœ°é¢åæ ‡ç³»ä¸‹å¼€å§‹ç‚¹çš„ä½ç½®
+*å‚æ•°ï¼šfloat max_speed æœ€å¤§é€Ÿåº¦ï¼ˆé™å¹…ä½¿ç”¨ï¼‰
+*è¿”å›å€¼ï¼š åº•ç›˜é©±åŠ¨çš„æ–¹å‘çŸ¢é‡ vec.x ä¸ºé€Ÿåº¦å¤§å°ï¼Œvec.yä¸ºé€Ÿåº¦æ–¹å‘ï¼ˆæ–¹å‘ä¸ºï¼š-PI~PI)
+*è¯´æ˜: çº æ­£è½¨è¿¹ä½¿ç”¨ï¼Œé…åˆpoint_tracerä½¿ç”¨
+*ä½œè€…: zx
 */
 vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed){  
   float current_agnle , current_distance , error_vertical , error_on_origin ,angle_sub;
@@ -1217,12 +1217,12 @@ vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed
     current_distance = sqrtf( (p2_x - chassis.pos_x)*(p2_x - chassis.pos_x) + (p2_y - chassis.pos_y)*(p2_y - chassis.pos_y) );
     angle_sub = fabsf(origin_angle - current_agnle);
     error_on_origin = cosf(angle_sub)*current_distance;
-    error_vertical = fabsf(sinf(angle_sub)*current_distance);  //¿ØÖÆÁ¿
+    error_vertical = fabsf(sinf(angle_sub)*current_distance);  //æ§åˆ¶é‡
 
     reference_point_x = (origin_distance - error_on_origin)*cosf(origin_angle) + p1_x;
     reference_point_y = (origin_distance - error_on_origin)*sinf(origin_angle) + p1_y;  
 
-    target_angle = atan2f(reference_point_y - chassis.pos_y , reference_point_x - chassis.pos_x);   //ÓÃÀ´½ÃÕıµÄËÙ¶ÈÊ¸Á¿µÄ·½Ïò
+    target_angle = atan2f(reference_point_y - chassis.pos_y , reference_point_x - chassis.pos_x);   //ç”¨æ¥çŸ«æ­£çš„é€Ÿåº¦çŸ¢é‡çš„æ–¹å‘
     
     if(error_vertical <= 1e-3){
       target_speed = 0;
@@ -1240,10 +1240,10 @@ vec line_control(float p1_x , float p1_y ,float p2_x,float p2_y, float max_speed
 }
 
 
-/**¸ù¾İÄ¿±êµã¸üĞÂĞÂµÄËÙ¶È·½Ïò
-*²ÎÊı£ºfloat point_y 	 point_x  µØÃæ×ø±êÏµÏÂÄ¿±êµãµÄÎ»ÖÃ
-*·µ»ØÖµ£º µ×ÅÌµÄËÙ¶È·½Ïò½Ç
-*ËµÃ÷: by zx
+/**æ ¹æ®ç›®æ ‡ç‚¹æ›´æ–°æ–°çš„é€Ÿåº¦æ–¹å‘
+*å‚æ•°ï¼šfloat point_y 	 point_x  åœ°é¢åæ ‡ç³»ä¸‹ç›®æ ‡ç‚¹çš„ä½ç½®
+*è¿”å›å€¼ï¼š åº•ç›˜çš„é€Ÿåº¦æ–¹å‘è§’
+*è¯´æ˜: by zx
 */
 float point_tracer_angle_return( float point_x , float point_y ){
   //float origin_distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
@@ -1252,7 +1252,7 @@ float point_tracer_angle_return( float point_x , float point_y ){
   //float current_agnle , current_distance , error_vertical;
   
   float chassis_target_x = point_x - chassis.pos_x;  
-  float chassis_target_y = point_y - chassis.pos_y;   //×ø±êÏµ±ä»»£¬ÔÚ±£Ö¤½Ç¶È»·£¨Ğ¡³µ×ø±êÏµ²»±äµÄÇé¿öÏÂ£©£¬½²Ä¿±êµãÓÉµØÃæ×ø±êÏµ±ä»»µ½Ğ¡³µ×ø±êÏµÖĞ
+  float chassis_target_y = point_y - chassis.pos_y;   //åæ ‡ç³»å˜æ¢ï¼Œåœ¨ä¿è¯è§’åº¦ç¯ï¼ˆå°è½¦åæ ‡ç³»ä¸å˜çš„æƒ…å†µä¸‹ï¼‰ï¼Œè®²ç›®æ ‡ç‚¹ç”±åœ°é¢åæ ‡ç³»å˜æ¢åˆ°å°è½¦åæ ‡ç³»ä¸­
   float mid = atan2f(chassis_target_y , chassis_target_x);
   float angle = chassis_angle_subtract( mid , chassis.angle);
   return angle;
@@ -1264,32 +1264,32 @@ float point_tracer_angle_return_static(float start_x, float start_y , float end_
 }
 
 
-//ÒÔÏÂÎª speed_trapezium ºÍ BoostAndSlowUpdate ÓÃµ½µÄ±äÁ¿ºÍ²ÎÊı
+//ä»¥ä¸‹ä¸º speed_trapezium å’Œ BoostAndSlowUpdate ç”¨åˆ°çš„å˜é‡å’Œå‚æ•°
 float Boost_Slow_Period = 0.105;
 float Boost_Period = 0.1;
 float Slow_Period = 0.16;
-int first_time_controler = 1; //ÖµÎª1Ê±£º¶ÔÒ»¸öĞÂµãÊ¹ÓÃ´Ëº¯Êı£¨²»ÓÃ¶à´Îµ÷ÓÃBoostAndSlowUpdate£©
+int first_time_controler = 1; //å€¼ä¸º1æ—¶ï¼šå¯¹ä¸€ä¸ªæ–°ç‚¹ä½¿ç”¨æ­¤å‡½æ•°ï¼ˆä¸ç”¨å¤šæ¬¡è°ƒç”¨BoostAndSlowUpdateï¼‰
 float last_point_x,last_point_y,origin_distance;
 
-/**ÌİĞÎËÙ¶ÈÇúÏß ¼ÓËÙ½×¶ÎºÍ¼õËÙ½×¶Î¸ù¾İ²»Í¬¾àÀëºÍËÙ¶È½øĞĞ×Ô¶¯µ÷Õû 
-*²ÎÊı£ºfloat total_distance ÆğÊ¼µãµ½ÖÕµãµÄ×Ü¾àÀë start_speed ¿ªÊ¼Ê±ËÙ¶È final_speed½áÊøÊ±ËÙ¶È max_speed×î´óËÙ¶È
-*·µ»ØÖµ£º ÎŞ
-*ËµÃ÷: by zx ½áºÏ speed_trapeziumÊ¹ÓÃ£¬speed_trapeziumĞèÒªµÄº¯Êı
+/**æ¢¯å½¢é€Ÿåº¦æ›²çº¿ åŠ é€Ÿé˜¶æ®µå’Œå‡é€Ÿé˜¶æ®µæ ¹æ®ä¸åŒè·ç¦»å’Œé€Ÿåº¦è¿›è¡Œè‡ªåŠ¨è°ƒæ•´ 
+*å‚æ•°ï¼šfloat total_distance èµ·å§‹ç‚¹åˆ°ç»ˆç‚¹çš„æ€»è·ç¦» start_speed å¼€å§‹æ—¶é€Ÿåº¦ final_speedç»“æŸæ—¶é€Ÿåº¦ max_speedæœ€å¤§é€Ÿåº¦
+*è¿”å›å€¼ï¼š æ— 
+*è¯´æ˜: by zx ç»“åˆ speed_trapeziumä½¿ç”¨ï¼Œspeed_trapeziuméœ€è¦çš„å‡½æ•°
 */
 void BoostAndSlowUpdate(float total_distance , int start_speed , int final_speed , int max_speed){
   Slow_Period = -0.195*total_distance + 0.00205*(max_speed - final_speed + 50) -0.7925;
   
-  if(Slow_Period >= 0.6) Slow_Period = 0.6;  //Slow_Period ÏŞÖÆ·ù¶È
+  if(Slow_Period >= 0.6) Slow_Period = 0.6;  //Slow_Period é™åˆ¶å¹…åº¦
   else if(Slow_Period <= 0.1) Slow_Period = 0.1;
   else Slow_Period = Slow_Period;
 
-  if(total_distance >= 5){    //boost_period ¸ù¾İ¾­ÑéÎó²î¹À¼Æ
+  if(total_distance >= 5){    //boost_period æ ¹æ®ç»éªŒè¯¯å·®ä¼°è®¡
     Boost_Period = 0.08;
   }
   else if(total_distance < 5 && total_distance > 1.5){
     Boost_Period = 0.12;
   }
-  else{ //Ğ¡ÓÚ1.5m
+  else{ //å°äº1.5m
     if(max_speed - start_speed >300)
     Boost_Period = 0.3;
     else Boost_Period = 0.1;
@@ -1298,10 +1298,10 @@ void BoostAndSlowUpdate(float total_distance , int start_speed , int final_speed
 
 //float last_pos , this_time_pos;
 
-/**ËÙ¶ÈÇúÏßÉú³É ÌİĞÎÇúÏß
-*²ÎÊı£ºfloat point_y 	 point_x  µØÃæ×ø±êÏµÏÂÄ¿±êµãµÄÎ»ÖÃ start_speed ¿ªÊ¼Ê±ËÙ¶È final_speed½áÊøÊ±ËÙ¶È max_speed×î´óËÙ¶È
-*·µ»ØÖµ£º µç»úµ±Ç°µÄËÙ¶È
-*ËµÃ÷: by zx
+/**é€Ÿåº¦æ›²çº¿ç”Ÿæˆ æ¢¯å½¢æ›²çº¿
+*å‚æ•°ï¼šfloat point_y 	 point_x  åœ°é¢åæ ‡ç³»ä¸‹ç›®æ ‡ç‚¹çš„ä½ç½® start_speed å¼€å§‹æ—¶é€Ÿåº¦ final_speedç»“æŸæ—¶é€Ÿåº¦ max_speedæœ€å¤§é€Ÿåº¦
+*è¿”å›å€¼ï¼š ç”µæœºå½“å‰çš„é€Ÿåº¦
+*è¯´æ˜: by zx
 */
 int speed_trapezium (float point_x , float point_y , int start_speed , int final_speed , int max_speed){
   float distance_to_target,speed;
@@ -1322,17 +1322,17 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
   }
   distance_to_target = sqrtf( (point_x - chassis.pos_x)*(point_x - chassis.pos_x) + (point_y - chassis.pos_y)*(point_y - chassis.pos_y) );
 
-  distance_to_target =  1 - distance_to_target / origin_distance ; //ÕıÔò»¯£¬Ê¹¾àÀë¶¼ÏŞÖÆÔÚ0~1·¶Î§ÄÚ
+  distance_to_target =  1 - distance_to_target / origin_distance ; //æ­£åˆ™åŒ–ï¼Œä½¿è·ç¦»éƒ½é™åˆ¶åœ¨0~1èŒƒå›´å†…
   if(distance_to_target >=  1) distance_to_target = 1;
   if(distance_to_target <=  0) distance_to_target = 0;
 
-  if(origin_distance <= 0.5) //Èç¹û¾àÀëĞ¡ÓÚ50cm²»½øĞĞÌİĞÎËÙ¶È¹æ»® Ê¹ÓÃ´ÓÆğÊ¼ËÙ¶Èµ½×îÖÕËÙ¶ÈµÄÖ±½ÓÏßĞÔ¹æ»®£¨Ò»ÌõÁ¬½ÓÆğÊ¼ËÙ¶ÈºÍ×îÖÕËÙ¶ÈµÄÖ±Ïß£©
+  if(origin_distance <= 0.5) //å¦‚æœè·ç¦»å°äº50cmä¸è¿›è¡Œæ¢¯å½¢é€Ÿåº¦è§„åˆ’ ä½¿ç”¨ä»èµ·å§‹é€Ÿåº¦åˆ°æœ€ç»ˆé€Ÿåº¦çš„ç›´æ¥çº¿æ€§è§„åˆ’ï¼ˆä¸€æ¡è¿æ¥èµ·å§‹é€Ÿåº¦å’Œæœ€ç»ˆé€Ÿåº¦çš„ç›´çº¿ï¼‰
   {
     speed = (final_speed - start_speed)*distance_to_target + start_speed;
   }
   else{
-    //ÒÔÏÂÎªÒ»¸ö·Ö¶Îº¯Êı£¬ÓÃÕâ¸öº¯Êı¼ÆËãËÙ¶È £¨ÌİĞÎËÙ¶È¿ØÖÆ£©
-    if(distance_to_target <= Boost_Period){     //¶ÔÓÚmax_speed==start_speed Ê±½øĞĞÓÅ»¯
+    //ä»¥ä¸‹ä¸ºä¸€ä¸ªåˆ†æ®µå‡½æ•°ï¼Œç”¨è¿™ä¸ªå‡½æ•°è®¡ç®—é€Ÿåº¦ ï¼ˆæ¢¯å½¢é€Ÿåº¦æ§åˆ¶ï¼‰
+    if(distance_to_target <= Boost_Period){     //å¯¹äºmax_speed==start_speed æ—¶è¿›è¡Œä¼˜åŒ–
       if(start_speed == max_speed) speed = max_speed;
       else
       speed = (max_speed - start_speed)* distance_to_target/Boost_Period + start_speed; 
@@ -1341,14 +1341,14 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
       speed = max_speed;
     }
     else{
-      if(final_speed == max_speed) int_speed = max_speed; //¶ÔÓÚmax_speed==final_speed Ê±½øĞĞÓÅ»¯
+      if(final_speed == max_speed) int_speed = max_speed; //å¯¹äºmax_speed==final_speed æ—¶è¿›è¡Œä¼˜åŒ–
       else
       speed = (final_speed - max_speed)/ Slow_Period * distance_to_target + ( Slow_Period * final_speed - final_speed + max_speed)/ Slow_Period;
     }
   }
   int_speed = (int)speed;
 
-  if(int_speed > max_speed) //ËÙ¶ÈÏŞÖÆ
+  if(int_speed > max_speed) //é€Ÿåº¦é™åˆ¶
     int_speed = max_speed;
   else if(int_speed <= 0) 
     int_speed = 0;
@@ -1357,13 +1357,13 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
   return int_speed;
 }
 
-int point_tracer_flag = 0;  //Îª1Ê±£º¿ÉÒÔÖ´ĞĞpoint_tracer£»Îª0Ê±£º½ûÓÃpoint_tracer PS:´Ë±äÁ¿Ö÷ÒªÎªµ÷ÊÔÊ±·½±ã¿ØÖÆ
-int point_arrived_flag = 0; //µ½´ïµãºóÎª1
-/**µ½´ïµãºó£¬½«¸÷ÖÖflagÖÃÎ»(ÖØÖÃÖÁÅÜµãÇ°µÄ×´Ì¬)
-*²ÎÊı£ºvoid
-*·µ»ØÖµ£º void
-*ËµÃ÷: Îªpoint_tracerÄÚ²¿º¯Êı£¬ÅäºÏpoint_tracerÊ¹ÓÃ
-*×÷Õß: zx
+int point_tracer_flag = 0;  //ä¸º1æ—¶ï¼šå¯ä»¥æ‰§è¡Œpoint_tracerï¼›ä¸º0æ—¶ï¼šç¦ç”¨point_tracer PS:æ­¤å˜é‡ä¸»è¦ä¸ºè°ƒè¯•æ—¶æ–¹ä¾¿æ§åˆ¶
+int point_arrived_flag = 0; //åˆ°è¾¾ç‚¹åä¸º1
+/**åˆ°è¾¾ç‚¹åï¼Œå°†å„ç§flagç½®ä½(é‡ç½®è‡³è·‘ç‚¹å‰çš„çŠ¶æ€)
+*å‚æ•°ï¼švoid
+*è¿”å›å€¼ï¼š void
+*è¯´æ˜: ä¸ºpoint_tracerå†…éƒ¨å‡½æ•°ï¼Œé…åˆpoint_tracerä½¿ç”¨
+*ä½œè€…: zx
 */
 void point_arrive(){
   point_arrived_flag = 1;
@@ -1374,21 +1374,21 @@ void point_arrive(){
   uprintf(CMD_USART,"\r\nArrived !!%d \r\n",count);
 }
 
-/**¡¾ºËĞÄº¯Êı¡¿ point_tracer,ÅÜµãº¯Êı
-*²ÎÊı£ºfloat start_x , float start_y ÎªÆğÊ¼µãµØÃæ×ø±êÏµ×ø±ê
-*²ÎÊı£ºfloat point_x , float point_y Îª×îÖÕµãµØÃæ×ø±êÏµ×ø±ê
-*²ÎÊı£ºint start_speed , int final_speed , int max_speed; start_speed ¿ªÊ¼Ê±ËÙ¶È£¬max_speed×î´óËÙ¶È£¬final_speedµ½´ïÖÕµãÊ±ËÙ¶È
-*·µ»ØÖµ£º int; <1> ·µ»ØÖµÎª0Ê±£º¿ÉÒÔ¿ªÊ¼ÅÜµã£¬²¢ÇÒÎ´µ½´ïÄ¿±êµã
-*·µ»ØÖµ£º int; <2> ·µ»ØÖµÎª-1Ê±£ºÄ¿Ç°²»³ÌĞò²»ÔÊĞíÅÜµã
-*·µ»ØÖµ£º int; <3> ·µ»ØÖµÎª1Ê±£ºµ½´ïÄ¿±êµã
-*ËµÃ÷: ºËĞÄº¯Êı£¬ÓÃÓÚÅÜµã£¬×îÖÕÅäºÏpoint_collection_tracer£¨ÅÜµã¼¯£©Ê¹ÓÃ
-*×÷Õß: zx
+/**ã€æ ¸å¿ƒå‡½æ•°ã€‘ point_tracer,è·‘ç‚¹å‡½æ•°
+*å‚æ•°ï¼šfloat start_x , float start_y ä¸ºèµ·å§‹ç‚¹åœ°é¢åæ ‡ç³»åæ ‡
+*å‚æ•°ï¼šfloat point_x , float point_y ä¸ºæœ€ç»ˆç‚¹åœ°é¢åæ ‡ç³»åæ ‡
+*å‚æ•°ï¼šint start_speed , int final_speed , int max_speed; start_speed å¼€å§‹æ—¶é€Ÿåº¦ï¼Œmax_speedæœ€å¤§é€Ÿåº¦ï¼Œfinal_speedåˆ°è¾¾ç»ˆç‚¹æ—¶é€Ÿåº¦
+*è¿”å›å€¼ï¼š int; <1> è¿”å›å€¼ä¸º0æ—¶ï¼šå¯ä»¥å¼€å§‹è·‘ç‚¹ï¼Œå¹¶ä¸”æœªåˆ°è¾¾ç›®æ ‡ç‚¹
+*è¿”å›å€¼ï¼š int; <2> è¿”å›å€¼ä¸º-1æ—¶ï¼šç›®å‰ä¸ç¨‹åºä¸å…è®¸è·‘ç‚¹
+*è¿”å›å€¼ï¼š int; <3> è¿”å›å€¼ä¸º1æ—¶ï¼šåˆ°è¾¾ç›®æ ‡ç‚¹
+*è¯´æ˜: æ ¸å¿ƒå‡½æ•°ï¼Œç”¨äºè·‘ç‚¹ï¼Œæœ€ç»ˆé…åˆpoint_collection_tracerï¼ˆè·‘ç‚¹é›†ï¼‰ä½¿ç”¨
+*ä½œè€…: zx
 */
-vec combine_vec , line_control_vec;   //point_tracerÄÚ²¿±äÁ¿
+vec combine_vec , line_control_vec;   //point_tracerå†…éƒ¨å˜é‡
 int point_tracer (float start_x , float start_y ,float point_x , float point_y , int start_speed , int final_speed , int max_speed){
   float toward_angle,toward_speed;
   float distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
-  if( point_tracer_flag == 1 && distance >= ARRIVE_DISTANCE ) //¿ÉÒÔ¿ªÊ¼ÅÜµã£¬²¢ÇÒÎ´µ½´ïÄ¿±êµã
+  if( point_tracer_flag == 1 && distance >= ARRIVE_DISTANCE ) //å¯ä»¥å¼€å§‹è·‘ç‚¹ï¼Œå¹¶ä¸”æœªåˆ°è¾¾ç›®æ ‡ç‚¹
   { 
     //toward_angle = point_tracer_angle_return(point_x , point_y);
     toward_angle = point_tracer_angle_return_static(start_x , start_y , point_x , point_y);
@@ -1404,10 +1404,10 @@ int point_tracer (float start_x , float start_y ,float point_x , float point_y ,
     return 0;
   }
   else {
-    if(point_tracer_flag != 1) //²»¿ÉÅÜµã
+    if(point_tracer_flag != 1) //ä¸å¯è·‘ç‚¹
     return -1;
 
-    if(distance < ARRIVE_DISTANCE) //µ½´ïµã
+    if(distance < ARRIVE_DISTANCE) //åˆ°è¾¾ç‚¹
     {
       chassis_gostraight_zx( final_speed , combine_vec.y , 0 , 0);
       point_arrive();
@@ -1429,7 +1429,9 @@ int ENBALE_POINT_COLLECTION_TRACER = 0;
 // int speed_control[2]={125 ,0};
 int count = 0;
 int point_count_control_flag = 0;
-
+/*
+è¿˜æ˜¯ä¸€ä¸ªä¸æˆç†Ÿçš„åŠŸèƒ½
+*/
 int point_retrack_first_ref_flag = 1;
 int point_retrack(float start_x ,float start_y , float final_X , float final_y){
   static float total_distance;
@@ -1448,18 +1450,24 @@ int point_retrack(float start_x ,float start_y , float final_X , float final_y){
   }
   else return 1;
 }
-
+/**point_collection_tracer è·‘ç‚¹é›†å‡½æ•°ï¼šç‚¹é›†ä½äºpoint_zx.c æ–‡ä»¶ä¸­ï¼ˆå…·ä½“ç‚¹é›†ä¸€äº›çš„ä½¿ç”¨çº¦å®šè§point_zx.cï¼‰
+*å‚æ•°ï¼šint point_num; è·‘ç‚¹é›†ä¸­å®šä¹‰çš„ç‚¹çš„æ•°é‡
+*è¯´æ˜: æœ€ç»ˆç›®æ ‡å‡½æ•°ï¼Œç”¨äºè·‘é›†ï¼Œä¸»è¦ä½¿ç”¨äº†point_tracerè¿™ä¸ªå‡½æ•°
+*ä½œè€…: zx
+*/
 void point_collection_tracer(int point_num){
   int mid_control = 0;
   if(ENBALE_POINT_COLLECTION_TRACER == 1 && count < point_num ){
     if(count < point_num-1){
-      if(count == 0){      
+      if(count == 0){
+        //è¢«æ³¨é‡Šçš„ä¸‹ä¸€è¡Œä¸ºï¼šæ­£å¸¸è·‘ç‚¹é›†ä½¿ç”¨çš„å‡½æ•°  
         //mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1] , max_speed_zx[count]);
         mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650 , 500);
         //point_retrack(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1]);
       }  
       if(count != 0){
-        if(point_arrived_flag == 1){      
+        if(point_arrived_flag == 1){
+          //è¢«æ³¨é‡Šçš„ä¸‹ä¸€è¡Œä¸ºï¼šæ­£å¸¸è·‘ç‚¹é›†ä½¿ç”¨çš„å‡½æ•°        
           //mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],speed_zx[count],speed_zx[count + 1], max_speed_zx[count]);
           mid_control = point_tracer(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1],650,650, 500);
           //point_retrack(zx_points_pos_x[count],zx_points_pos_y[count],zx_points_pos_x[count+1],zx_points_pos_y[count+1]);
@@ -1470,9 +1478,9 @@ void point_collection_tracer(int point_num){
       mid_control = point_tracer(zx_points_pos_x[count-1],zx_points_pos_y[count-1],zx_points_pos_x[count] ,zx_points_pos_y[count], 150 , 0 , 200);
       //point_retrack(zx_points_pos_x[count-1],zx_points_pos_y[count-1],zx_points_pos_x[count] ,zx_points_pos_y[count]);
     }
-    /* ÒÔÏÂÎªcount++µÄ¿ØÖÆ */
+    /* ä»¥ä¸‹ä¸ºcount++çš„æ§åˆ¶ */
     if(mid_control == 1){
-      if(point_count_control_flag<=2){    //·ÀÖ¹ÊıÖµ¼ÓµÄ¹ı´ó£¨Êµ¼ÊÉÏÖ»ĞèÒª¼ÓÒ»´Î£©
+      if(point_count_control_flag<=2){    //é˜²æ­¢æ•°å€¼åŠ çš„è¿‡å¤§ï¼ˆå®é™…ä¸Šåªéœ€è¦åŠ ä¸€æ¬¡ï¼‰
       point_count_control_flag ++;    
       }
     }
@@ -1482,19 +1490,26 @@ void point_collection_tracer(int point_num){
     }
   }
   
-  if(count >= point_num){
-    count = 0;
-    chassis_gostraight_zx(0,0,chassis.angle,0);
-    ENBALE_POINT_COLLECTION_TRACER = 0;
+  if(count >= point_num){   //ENBALE_POINT_COLLECTION_TRACER == 0 && count>= point_num
+    count = 0;    //è·‘ç‚¹é›†è®¡æ•°æ¸…é›¶
+    chassis_gostraight_zx(0,0,chassis.angle,0); //åœæ­¢çš„æŒ‡ä»¤
+    ENBALE_POINT_COLLECTION_TRACER = 0;   //å…³é—­è·‘ç‚¹é›†
     uprintf(CMD_USART , "END TRACER !");
   }
 }
 
+
+
 int go_to_point_test_flag = 0;
+/**go_to_point_for_test go_toå‡½æ•°ï¼Œç”¨äºæµ‹è¯•ä¸­çš„å›åˆ°åˆå§‹ä½ç½®æˆ–è€…ä¸€äº›ç‰¹æ®Šä½ç½®
+*å‚æ•°ï¼šfloat point_X , float point_y æœ€ç»ˆç›®æ ‡ç‚¹çš„ä½ç½®
+*è¯´æ˜: åº”è¯¥åªä¼šç”¨äºè°ƒè¯•ä¸­ï¼Œé€Ÿåº¦çŸ¢é‡æ–¹å‘æ”¹å˜çš„ç®—æ³•ï¼Œå…¶ä½™é€»è¾‘ä¸point_tracerå®Œå…¨ä¸€è‡´ã€‚
+*ä½œè€…: zx
+*/
 void go_to_point_for_test(float point_x , float point_y){
   float toward_angle,toward_speed;
   float distance = sqrtf( (chassis.pos_x - point_x)*(chassis.pos_x - point_x) + (chassis.pos_y - point_y)*(chassis.pos_y - point_y) );
-  if( go_to_point_test_flag == 1 && distance >= ARRIVE_DISTANCE ) //¿ÉÒÔ¿ªÊ¼ÅÜµã£¬²¢ÇÒÎ´µ½´ïÄ¿±êµã
+  if( go_to_point_test_flag == 1 && distance >= ARRIVE_DISTANCE ) //å¯ä»¥å¼€å§‹è·‘ç‚¹ï¼Œå¹¶ä¸”æœªåˆ°è¾¾ç›®æ ‡ç‚¹
   { 
     toward_angle = point_tracer_angle_return(point_x , point_y);
     
@@ -1505,11 +1520,11 @@ void go_to_point_for_test(float point_x , float point_y){
     return;
   }
   else {
-    if(go_to_point_test_flag != 1){ //²»¿ÉÅÜµã
+    if(go_to_point_test_flag != 1){ //ä¸å¯è·‘ç‚¹
       chassis_gostraight_zx( 0 , combine_vec.y , chassis.angle , 0);
       return;
     }
-    if(distance < ARRIVE_DISTANCE) //µ½´ïµã
+    if(distance < ARRIVE_DISTANCE) //åˆ°è¾¾ç‚¹
     {
       //chassis_gostraight_zx( 50 , combine_vec.y , 0 , 0);
       //point_arrived_flag = 1;
@@ -1521,18 +1536,21 @@ void go_to_point_for_test(float point_x , float point_y){
       uprintf(CMD_USART,"\r\ngo_point_arrived %f,%f\r\n",chassis.pos_x , chassis.pos_y);
       chassis_gostraight_zx(0 , 0 , 0 , 0);
       return;
-    }
-    
+    }    
   }
   return;
 }
-
+/**state_reset çŠ¶æ€æ¸…é›¶ï¼šç”¨äºè·‘ç‚¹é›†ç»“æŸåçš„çŠ¶æ€æ¸…é›¶ï¼Œæ¢å¤åˆ°è·‘ç‚¹å‰çš„çŠ¶æ€
+*å‚æ•°ï¼švoid
+*è¯´æ˜: è°ƒè¯•æ—¶ä½¿ç”¨ï¼Œç”¨cmd_funcä¸­çš„å‡½æ•°è°ƒç”¨
+*ä½œè€…: zx
+*/
 void state_reset(){
-  count = 0;    //ÅÜµã¼¯¼ÆÊıÇåÁã
-  point_count_control_flag = 0;   //¿ØÖÆcount++µÄ±äÁ¿
-  ENBALE_POINT_COLLECTION_TRACER = 0;   //½ûÖ¹ÅÜµã
-  point_tracer_flag = 0;    //½ûÓÃpoint_tracer
-  //ÒÔÏÂÂß¼­µÈÍ¬ÓÚpoint_arrive 
+  count = 0;    //è·‘ç‚¹é›†è®¡æ•°æ¸…é›¶
+  point_count_control_flag = 0;   //æ§åˆ¶count++çš„å˜é‡
+  ENBALE_POINT_COLLECTION_TRACER = 0;   //ç¦æ­¢è·‘ç‚¹
+  point_tracer_flag = 0;    //ç¦ç”¨point_tracer
+  //ä»¥ä¸‹é€»è¾‘ç­‰åŒäºpoint_arrive 
   point_arrived_flag = 0;
   point_tracer_flag = 0;
   first_time_controler = 1;

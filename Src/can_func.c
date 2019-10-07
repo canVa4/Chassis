@@ -65,7 +65,7 @@ void can_ccd_handle(CanRxMsgTypeDef* pRxMsg)
     //uprintf(CMD_USART,"ccd_pos = %d\r\n",can_RX_data.ui16[0]);
 }
 
-void can_send_slide_pos(int pos,int flag)//0¶¯
+void can_send_slide_pos(int pos,int flag)//0åŠ¨
 {
     can_TX_data.in[0] = pos;
     can_TX_data.in[1] = flag;

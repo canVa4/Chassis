@@ -44,7 +44,7 @@
 
 /* USER CODE BEGIN 0 */
 static int canlistnum = 0;
-CanList canList[50];//×î¶àÄÜ¼Ó50¸öcanÁ´½Ó£¬¿ÉÒÔ¸Ä
+CanList canList[50];//æœ€å¤šèƒ½åŠ 50ä¸ªcané“¾æ¥ï¼Œå¯ä»¥æ”¹
 CAN_FilterConfTypeDef  sFilterConfig;
 static CanTxMsgTypeDef TxMessage;
 static CanRxMsgTypeDef RxMessage;
@@ -181,17 +181,17 @@ void can_init()
 
 void Configure_Filter(void)
 {  
-    sFilterConfig.FilterNumber = 0;                   //¹ıÂËÆ÷×é0
-    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK; //¹¤×÷ÔÚ±êÊ¶·ûÆÁ±ÎÎ»Ä£Ê½
-    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;//ÂË²¨Æ÷Î»¿íÎªµ¥¸ö32Î»
+    sFilterConfig.FilterNumber = 0;                   //è¿‡æ»¤å™¨ç»„0
+    sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK; //å·¥ä½œåœ¨æ ‡è¯†ç¬¦å±è”½ä½æ¨¡å¼
+    sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;//æ»¤æ³¢å™¨ä½å®½ä¸ºå•ä¸ª32ä½
     
     
-    sFilterConfig.FilterIdHigh =0x0000<<5;//0x0122<<5;//(((unsigned int)0x1314<<3)&0xFFFF0000)>>16; //Òª¹ıÂËµÄ£É£Ä¸ßÎ»
-    sFilterConfig.FilterIdLow = 0x0000;//(((unsigned int)0x1314<<3)|CAN_ID_EXT|CAN_RTR_DATA)&0xFFFF;//Òª¹ıÂËµÄIDµÍÎ»
+    sFilterConfig.FilterIdHigh =0x0000<<5;//0x0122<<5;//(((unsigned int)0x1314<<3)&0xFFFF0000)>>16; //è¦è¿‡æ»¤çš„ï¼©ï¼¤é«˜ä½
+    sFilterConfig.FilterIdLow = 0x0000;//(((unsigned int)0x1314<<3)|CAN_ID_EXT|CAN_RTR_DATA)&0xFFFF;//è¦è¿‡æ»¤çš„IDä½ä½
     sFilterConfig.FilterMaskIdHigh =0x0000;// 0xffff;
     sFilterConfig.FilterMaskIdLow = 0x0000;//0xffff;
-    sFilterConfig.FilterFIFOAssignment =CAN_FILTER_FIFO0;//¹ıÂËÆ÷±»¹ØÁªµ½FIFO0£»
-    sFilterConfig.FilterActivation = ENABLE;//Ê¹ÄÜ¹ıÂËÆ÷
+    sFilterConfig.FilterFIFOAssignment =CAN_FILTER_FIFO0;//è¿‡æ»¤å™¨è¢«å…³è”åˆ°FIFO0ï¼›
+    sFilterConfig.FilterActivation = ENABLE;//ä½¿èƒ½è¿‡æ»¤å™¨
     sFilterConfig.BankNumber = 14;
     HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig);
 }
@@ -199,10 +199,10 @@ void Configure_Filter(void)
 
 
 /****
-*@brief ÓÃcan×ÜÏß·¢ËÍÊı¾İ
-*@param ID : ·¢ËÍÊı¾İµÄID
-*@param data : ·¢ËÍµÄÊı¾İ£¬³¤¶ÈÎª8
-*@retval : ·¢ËÍÊ§°Ü·µ»Ø0£¬Õı³£·µ»Ø1
+*@brief ç”¨canæ€»çº¿å‘é€æ•°æ®
+*@param ID : å‘é€æ•°æ®çš„ID
+*@param data : å‘é€çš„æ•°æ®ï¼Œé•¿åº¦ä¸º8
+*@retval : å‘é€å¤±è´¥è¿”å›0ï¼Œæ­£å¸¸è¿”å›1
 */
 int can_send_msg(uint32_t ID, uint8_t* data, uint32_t len)
 {
@@ -222,10 +222,10 @@ int can_send_msg(uint32_t ID, uint8_t* data, uint32_t len)
 }
 
 /****
-*@brief ÔÚcan×ÜÏß½ÓÊÕ±íÖĞÌí¼ÓÏî
-*@param ID : ½ÓÊÕÊı¾İµÄID
-*@param void (*func)(uint8_t data[8]) : ½ÓÊÕÊı¾İÁ´½ÓµÄ´¦Àíº¯Êı
-*@retval ·µ»Ø1±íÊ¾IDÔ½½ç£¬·µ»Ø0±íÊ¾Õı³£
+*@brief åœ¨canæ€»çº¿æ¥æ”¶è¡¨ä¸­æ·»åŠ é¡¹
+*@param ID : æ¥æ”¶æ•°æ®çš„ID
+*@param void (*func)(uint8_t data[8]) : æ¥æ”¶æ•°æ®é“¾æ¥çš„å¤„ç†å‡½æ•°
+*@retval è¿”å›1è¡¨ç¤ºIDè¶Šç•Œï¼Œè¿”å›0è¡¨ç¤ºæ­£å¸¸
 ****/
 int can_add_callback(uint32_t ID, void (*func)(CanRxMsgTypeDef* pRxMsg)) 
 {
@@ -237,10 +237,10 @@ int can_add_callback(uint32_t ID, void (*func)(CanRxMsgTypeDef* pRxMsg))
 
 
 /****
-*@brief ½«½ÓÊÕµ½µÄÊı¾İÓëcan×ÜÏß½ÓÊÕ±íÆ¥Åä
-*@param ID : ½ÓÊÕµ½Êı¾İµÄID
-*@param uint8_t data[8] : ½ÓÊÕµÄÊı¾İ
-*@retval ·µ»Ø1±íÊ¾Æ¥ÅäÊ§°Ü£¬·µ»Ø0±íÊ¾Õı³£
+*@brief å°†æ¥æ”¶åˆ°çš„æ•°æ®ä¸canæ€»çº¿æ¥æ”¶è¡¨åŒ¹é…
+*@param ID : æ¥æ”¶åˆ°æ•°æ®çš„ID
+*@param uint8_t data[8] : æ¥æ”¶çš„æ•°æ®
+*@retval è¿”å›1è¡¨ç¤ºåŒ¹é…å¤±è´¥ï¼Œè¿”å›0è¡¨ç¤ºæ­£å¸¸
 */
 int CAN_LIST_MATCH(uint32_t ID, CanRxMsgTypeDef* pRxMsg)
 {
@@ -257,7 +257,7 @@ int CAN_LIST_MATCH(uint32_t ID, CanRxMsgTypeDef* pRxMsg)
 
 
 /****
-*@brief can½ÓÊÕ»Øµ÷º¯Êı
+*@brief canæ¥æ”¶å›è°ƒå‡½æ•°
 ****/
 void HAL_CAN_RxCpltCallback(CAN_HandleTypeDef* hcan1)	
 {
