@@ -1358,7 +1358,7 @@ int speed_trapezium (float point_x , float point_y , int start_speed , int final
 }
 
 int point_tracer_flag = 0;  //为1时：可以执行point_tracer；为0时：禁用point_tracer PS:此变量主要为调试时方便控制
-int point_arrived_flag = 0; //到达点后为1
+static int point_arrived_flag = 0; //到达点后为1
 /**到达点后，将各种flag置位(重置至跑点前的状态)
 *参数：void
 *返回值： void
@@ -1429,10 +1429,10 @@ int ENBALE_POINT_COLLECTION_TRACER = 0;
 // int speed_control[2]={125 ,0};
 int count = 0;
 int point_count_control_flag = 0;
+int point_retrack_first_ref_flag = 1;
 /*
 还是一个不成熟的功能
 */
-int point_retrack_first_ref_flag = 1;
 int point_retrack(float start_x ,float start_y , float final_X , float final_y){
   static float total_distance;
   float distance_now;

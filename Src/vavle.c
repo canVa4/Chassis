@@ -8,11 +8,11 @@ int deliver_red = 13300;
 int deliver_mid = 9190;
 
 
-void upper_back_to_place()//Ã»°²Î¢¶¯²»ÒªÓÃÕâ¸ö³õÊ¼»¯//×èÈûº¯Êı£¬½¨Òé·ÅÔÚ³õÊ¼»¯
+void upper_back_to_place()//æ²¡å®‰å¾®åŠ¨ä¸è¦ç”¨è¿™ä¸ªåˆå§‹åŒ–//é˜»å¡å‡½æ•°ï¼Œå»ºè®®æ”¾åœ¨åˆå§‹åŒ–
 {
     can_send_slide_pos(370,3);
     /*while(HAL_GPIO_ReadPin(GPIOF, GPIO_PIN_5) != 1);   
-    can_send_slide_pos(370,2);//ÇåÁã*/
+    can_send_slide_pos(370,2);//æ¸…é›¶*/
         
     while(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) != 1)
     {
@@ -83,9 +83,9 @@ void putback_craw()
 }
 
 /*
-* ĞŞ¸Ä£º5/22 4£º06---->¼ĞÈ¡ºóÖ±½ÓÌ§ÆğÀ´£¬ÑÓÊ±Ì§µÚ¶ş´ÎÍ¶ÖÀÈİÒ××²£¬È¥µôÁËupper_flag = 2
-* ĞŞ¸Ä£º5/22 4£º06---->upper_flag 9 10Ö®¼ä¼ÓÉÏÔÚÍ¶ÖÀÍê³É¼ÆÊı£¬ÏÎ½Ó×ßµÚ¶ş´ÎÍ¶ÖÀ µÚÈı´ÎÍ¶ÖÀ
-* ĞŞ¸Ä£º5/22 4£º09---->upper_flag 10µ¥¶ÀÄÃ³öÀ´£¬ÎªÁËµÚ¶şµÚÈı´Î¼ĞÊŞ¹Ç±ßÒÆ¶¯±ß¸´Î»Í¶ÖÀ×°ÖÃ
+* ä¿®æ”¹ï¼š5/22 4ï¼š06---->å¤¹å–åç›´æ¥æŠ¬èµ·æ¥ï¼Œå»¶æ—¶æŠ¬ç¬¬äºŒæ¬¡æŠ•æ·å®¹æ˜“æ’ï¼Œå»æ‰äº†upper_flag = 2
+* ä¿®æ”¹ï¼š5/22 4ï¼š06---->upper_flag 9 10ä¹‹é—´åŠ ä¸Šåœ¨æŠ•æ·å®Œæˆè®¡æ•°ï¼Œè¡”æ¥èµ°ç¬¬äºŒæ¬¡æŠ•æ· ç¬¬ä¸‰æ¬¡æŠ•æ·
+* ä¿®æ”¹ï¼š5/22 4ï¼š09---->upper_flag 10å•ç‹¬æ‹¿å‡ºæ¥ï¼Œä¸ºäº†ç¬¬äºŒç¬¬ä¸‰æ¬¡å¤¹å…½éª¨è¾¹ç§»åŠ¨è¾¹å¤ä½æŠ•æ·è£…ç½®
 */
 void upper_thread()
 {
@@ -231,7 +231,7 @@ void upper_thread()
             upper_flag = 0;
         }
         break;
-      case 100://ÅÄ°ÍÕÆ
+      case 100://æ‹å·´æŒ
         delay_time--;//if delay time arrived, stretch out the arm
         if(delay_time <= 0)
         {
@@ -259,7 +259,7 @@ void upper_thread()
         break;
         
         
-      case 200://Í¶ÖÀÒ»´ÎºóÊÕ»Ø£¬½á¹¹²»»¹Ô­
+      case 200://æŠ•æ·ä¸€æ¬¡åæ”¶å›ï¼Œç»“æ„ä¸è¿˜åŸ
         upper_throw();
         delay_time = 60;
         upper_flag = 201;
@@ -276,7 +276,7 @@ void upper_thread()
     case 300:
         delay_time = 200;
         upper_flag = 301;
-      case 301://·öÒ»ÏÂÊŞ¹Ç
+      case 301://æ‰¶ä¸€ä¸‹å…½éª¨
           delay_time--;
           if(delay_time <= 0)
           {

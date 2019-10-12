@@ -34,7 +34,7 @@ vec vec_mul_i(vec a, double b)
 	return a;
 }
 
-vec vec_normal(vec a)//Ë³Ê±Õë90¶È·¨Ïò 
+vec vec_normal(vec a)//é¡ºæ—¶é’ˆ90åº¦æ³•å‘ 
 {
 	vec tmp;
 	tmp.x = a.y;

@@ -1,25 +1,25 @@
 #include "stmflash.h"
 #include "math.h"
 //////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌĞòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßĞí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//ALIENTEK STM32F429¿ª·¢°å
-//STM32ÄÚ²¿FLASH¶ÁĞ´ Çı¶¯´úÂë	   
-//ÕıµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//´´½¨ÈÕÆÚ:2016/1/16
-//°æ±¾£ºV1.0
-//°æÈ¨ËùÓĞ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾ 2014-2024
+//æœ¬ç¨‹åºåªä¾›å­¦ä¹ ä½¿ç”¨ï¼Œæœªç»ä½œè€…è®¸å¯ï¼Œä¸å¾—ç”¨äºå…¶å®ƒä»»ä½•ç”¨é€”
+//ALIENTEK STM32F429å¼€å‘æ¿
+//STM32å†…éƒ¨FLASHè¯»å†™ é©±åŠ¨ä»£ç 	   
+//æ­£ç‚¹åŸå­@ALIENTEK
+//æŠ€æœ¯è®ºå›:www.openedv.com
+//åˆ›å»ºæ—¥æœŸ:2016/1/16
+//ç‰ˆæœ¬ï¼šV1.0
+//ç‰ˆæƒæ‰€æœ‰ï¼Œç›—ç‰ˆå¿…ç©¶ã€‚
+//Copyright(C) å¹¿å·å¸‚æ˜Ÿç¿¼ç”µå­ç§‘æŠ€æœ‰é™å…¬å¸ 2014-2024
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 	
 
-//¶ÁÈ¡Ö¸¶¨µØÖ·µÄ×Ö(32Î»Êı¾İ) 
-//faddr:¶ÁµØÖ· 
-//·µ»ØÖµ:¶ÔÓ¦Êı¾İ.
+//è¯»å–æŒ‡å®šåœ°å€çš„å­—(32ä½æ•°æ®) 
+//faddr:è¯»åœ°å€ 
+//è¿”å›å€¼:å¯¹åº”æ•°æ®.
 float flash_chassis_init_x = 0, flash_chassis_init_y = 0;
 float flash_saved_x_red = 0, flash_saved_y_red = 0;
 float flash_saved_x_blue = 0, flash_saved_y_blue = 0;
-float flash_data[4]={0,0,0,0};//ÉÕ½øflashÖĞµÄ14¸öÊı¾İ
+float flash_data[4]={0,0,0,0};//çƒ§è¿›flashä¸­çš„14ä¸ªæ•°æ®
 u8 STMFLASH_GetFlashSector(u32 addr);
 
 void write_prams()
@@ -29,13 +29,13 @@ void write_prams()
   int i;
   FLASH_EraseInitTypeDef EraseInitStruct;
   
-  HAL_FLASH_Unlock();//½âËøflash
+  HAL_FLASH_Unlock();//è§£é”flash
   
-  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;//Ñ¡ÔñÒ³²Á³ı»¹ÊÇ¿é²Á³ı£¬ÕâÀïÊÇÒ³²Á³ı
+  EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;//é€‰æ‹©é¡µæ“¦é™¤è¿˜æ˜¯å—æ“¦é™¤ï¼Œè¿™é‡Œæ˜¯é¡µæ“¦é™¤
   EraseInitStruct.Sector=STMFLASH_GetFlashSector(FLASH_SAVE_ADDR);
-  EraseInitStruct.NbSectors=1;   //²Á³ıµÄÒ³Êı
+  EraseInitStruct.NbSectors=1;   //æ“¦é™¤çš„é¡µæ•°
   
-  if(HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK)//µ÷ÓÃ²Á³ıº¯Êı
+  if(HAL_FLASHEx_Erase(&EraseInitStruct, &SectorError) != HAL_OK)//è°ƒç”¨æ“¦é™¤å‡½æ•°
   { 
     uprintf(CMD_USART,"erase flash fail!\r\n");
     HAL_FLASH_Lock();
@@ -44,12 +44,12 @@ void write_prams()
   int pram_num=sizeof(flash_data)/sizeof(flash_data[0]);
   
   for(i=0;i<pram_num;++i){
-    temp=*((uint32_t *)(flash_data+i));//½«flash_data[i]¶ÔÓ¦µÄfloatÀàĞÍµÄ4×Ö½ÚÊı¾İÒÔÎŞ·ûºÅÕûĞÍ¶Á³ö¡£
-    //flash_dataÊÇflash_data[0]µØÖ·,flash_data+iÊÇflash_data[i]µØÖ·,È»ºó½«flash_data[i]¶ÔÓ¦µÄfloatĞÍ×ª»¯ÎªÎŞ·ûºÅÕûĞÍ,ÔÙÈ¡Õâ¸öÖ¸ÕëÖ¸ÏòµÄµØÖ·ÀïµÄÖµ
-    HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,FLASH_SAVE_ADDR+i*4,temp);  //¶ÔflashÉÕĞ´
+    temp=*((uint32_t *)(flash_data+i));//å°†flash_data[i]å¯¹åº”çš„floatç±»å‹çš„4å­—èŠ‚æ•°æ®ä»¥æ— ç¬¦å·æ•´å‹è¯»å‡ºã€‚
+    //flash_dataæ˜¯flash_data[0]åœ°å€,flash_data+iæ˜¯flash_data[i]åœ°å€,ç„¶åå°†flash_data[i]å¯¹åº”çš„floatå‹è½¬åŒ–ä¸ºæ— ç¬¦å·æ•´å‹,å†å–è¿™ä¸ªæŒ‡é’ˆæŒ‡å‘çš„åœ°å€é‡Œçš„å€¼
+    HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,FLASH_SAVE_ADDR+i*4,temp);  //å¯¹flashçƒ§å†™
     uprintf(CMD_USART,"write Pram[%d]Ok!\r\n",i);
   }
-  HAL_FLASH_Lock();//Ëø×¡flash
+  HAL_FLASH_Lock();//é”ä½flash
   uprintf(CMD_USART,"Write OK!\r\n");
 }
 
@@ -88,9 +88,9 @@ u32 STMFLASH_ReadWord(u32 faddr)
 	return *(vu32*)faddr; 
 }
 
-//»ñÈ¡Ä³¸öµØÖ·ËùÔÚµÄflashÉÈÇø
-//addr:flashµØÖ·
-//·µ»ØÖµ:0~11,¼´addrËùÔÚµÄÉÈÇø
+//è·å–æŸä¸ªåœ°å€æ‰€åœ¨çš„flashæ‰‡åŒº
+//addr:flashåœ°å€
+//è¿”å›å€¼:0~11,å³addræ‰€åœ¨çš„æ‰‡åŒº
 u8 STMFLASH_GetFlashSector(u32 addr)
 {
 	if(addr<ADDR_FLASH_SECTOR_1)return FLASH_SECTOR_0;
@@ -107,16 +107,16 @@ u8 STMFLASH_GetFlashSector(u32 addr)
 	return FLASH_SECTOR_11;	
 }
 
-//´ÓÖ¸¶¨µØÖ·¿ªÊ¼Ğ´ÈëÖ¸¶¨³¤¶ÈµÄÊı¾İ
-//ÌØ±ğ×¢Òâ:ÒòÎªSTM32F4µÄÉÈÇøÊµÔÚÌ«´ó,Ã»°ì·¨±¾µØ±£´æÉÈÇøÊı¾İ,ËùÒÔ±¾º¯Êı
-//         Ğ´µØÖ·Èç¹û·Ç0XFF,ÄÇÃ´»áÏÈ²Á³ıÕû¸öÉÈÇøÇÒ²»±£´æÉÈÇøÊı¾İ.ËùÒÔ
-//         Ğ´·Ç0XFFµÄµØÖ·,½«µ¼ÖÂÕû¸öÉÈÇøÊı¾İ¶ªÊ§.½¨ÒéĞ´Ö®Ç°È·±£ÉÈÇøÀï
-//         Ã»ÓĞÖØÒªÊı¾İ,×îºÃÊÇÕû¸öÉÈÇøÏÈ²Á³ıÁË,È»ºóÂıÂıÍùºóĞ´. 
-//¸Ãº¯Êı¶ÔOTPÇøÓòÒ²ÓĞĞ§!¿ÉÒÔÓÃÀ´Ğ´OTPÇø!
-//OTPÇøÓòµØÖ··¶Î§:0X1FFF7800~0X1FFF7A0F(×¢Òâ£º×îºó16×Ö½Ú£¬ÓÃÓÚOTPÊı¾İ¿éËø¶¨£¬±ğÂÒĞ´£¡£¡)
-//WriteAddr:ÆğÊ¼µØÖ·(´ËµØÖ·±ØĞëÎª4µÄ±¶Êı!!)
-//pBuffer:Êı¾İÖ¸Õë
-//NumToWrite:×Ö(32Î»)Êı(¾ÍÊÇÒªĞ´ÈëµÄ32Î»Êı¾İµÄ¸öÊı.) 
+//ä»æŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
+//ç‰¹åˆ«æ³¨æ„:å› ä¸ºSTM32F4çš„æ‰‡åŒºå®åœ¨å¤ªå¤§,æ²¡åŠæ³•æœ¬åœ°ä¿å­˜æ‰‡åŒºæ•°æ®,æ‰€ä»¥æœ¬å‡½æ•°
+//         å†™åœ°å€å¦‚æœé0XFF,é‚£ä¹ˆä¼šå…ˆæ“¦é™¤æ•´ä¸ªæ‰‡åŒºä¸”ä¸ä¿å­˜æ‰‡åŒºæ•°æ®.æ‰€ä»¥
+//         å†™é0XFFçš„åœ°å€,å°†å¯¼è‡´æ•´ä¸ªæ‰‡åŒºæ•°æ®ä¸¢å¤±.å»ºè®®å†™ä¹‹å‰ç¡®ä¿æ‰‡åŒºé‡Œ
+//         æ²¡æœ‰é‡è¦æ•°æ®,æœ€å¥½æ˜¯æ•´ä¸ªæ‰‡åŒºå…ˆæ“¦é™¤äº†,ç„¶åæ…¢æ…¢å¾€åå†™. 
+//è¯¥å‡½æ•°å¯¹OTPåŒºåŸŸä¹Ÿæœ‰æ•ˆ!å¯ä»¥ç”¨æ¥å†™OTPåŒº!
+//OTPåŒºåŸŸåœ°å€èŒƒå›´:0X1FFF7800~0X1FFF7A0F(æ³¨æ„ï¼šæœ€å16å­—èŠ‚ï¼Œç”¨äºOTPæ•°æ®å—é”å®šï¼Œåˆ«ä¹±å†™ï¼ï¼)
+//WriteAddr:èµ·å§‹åœ°å€(æ­¤åœ°å€å¿…é¡»ä¸º4çš„å€æ•°!!)
+//pBuffer:æ•°æ®æŒ‡é’ˆ
+//NumToWrite:å­—(32ä½)æ•°(å°±æ˜¯è¦å†™å…¥çš„32ä½æ•°æ®çš„ä¸ªæ•°.) 
 void STMFLASH_Write(u32 WriteAddr,u32 *pBuffer,u32 NumToWrite)	
 { 
 	FLASH_EraseInitTypeDef FlashEraseInit;
@@ -124,64 +124,64 @@ void STMFLASH_Write(u32 WriteAddr,u32 *pBuffer,u32 NumToWrite)
 	u32 SectorError=0;
 	u32 addrx=0;
 	u32 endaddr=0;	
-	if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//·Ç·¨µØÖ·
+	if(WriteAddr<STM32_FLASH_BASE||WriteAddr%4)return;	//éæ³•åœ°å€
     
-	HAL_FLASH_Unlock();             //½âËø	
-	addrx=WriteAddr;				//Ğ´ÈëµÄÆğÊ¼µØÖ·
-	endaddr=WriteAddr+NumToWrite*4;	//Ğ´ÈëµÄ½áÊøµØÖ·
+	HAL_FLASH_Unlock();             //è§£é”	
+	addrx=WriteAddr;				//å†™å…¥çš„èµ·å§‹åœ°å€
+	endaddr=WriteAddr+NumToWrite*4;	//å†™å…¥çš„ç»“æŸåœ°å€
     
 	if(addrx<0X1FFF0000)
 	{
-		while(addrx<endaddr)		//É¨ÇåÒ»ÇĞÕÏ°­.(¶Ô·ÇFFFFFFFFµÄµØ·½,ÏÈ²Á³ı)
+		while(addrx<endaddr)		//æ‰«æ¸…ä¸€åˆ‡éšœç¢.(å¯¹éFFFFFFFFçš„åœ°æ–¹,å…ˆæ“¦é™¤)
 		{
-			 if(STMFLASH_ReadWord(addrx)!=0XFFFFFFFF)//ÓĞ·Ç0XFFFFFFFFµÄµØ·½,Òª²Á³ıÕâ¸öÉÈÇø
+			 if(STMFLASH_ReadWord(addrx)!=0XFFFFFFFF)//æœ‰é0XFFFFFFFFçš„åœ°æ–¹,è¦æ“¦é™¤è¿™ä¸ªæ‰‡åŒº
 			{   
-				FlashEraseInit.TypeErase=FLASH_TYPEERASE_SECTORS;       //²Á³ıÀàĞÍ£¬ÉÈÇø²Á³ı 
-				FlashEraseInit.Sector=STMFLASH_GetFlashSector(addrx);   //Òª²Á³ıµÄÉÈÇø
-				FlashEraseInit.NbSectors=1;                             //Ò»´ÎÖ»²Á³ıÒ»¸öÉÈÇø
-				FlashEraseInit.VoltageRange=FLASH_VOLTAGE_RANGE_3;      //µçÑ¹·¶Î§£¬VCC=2.7~3.6VÖ®¼ä!!
+				FlashEraseInit.TypeErase=FLASH_TYPEERASE_SECTORS;       //æ“¦é™¤ç±»å‹ï¼Œæ‰‡åŒºæ“¦é™¤ 
+				FlashEraseInit.Sector=STMFLASH_GetFlashSector(addrx);   //è¦æ“¦é™¤çš„æ‰‡åŒº
+				FlashEraseInit.NbSectors=1;                             //ä¸€æ¬¡åªæ“¦é™¤ä¸€ä¸ªæ‰‡åŒº
+				FlashEraseInit.VoltageRange=FLASH_VOLTAGE_RANGE_3;      //ç”µå‹èŒƒå›´ï¼ŒVCC=2.7~3.6Vä¹‹é—´!!
 				if(HAL_FLASHEx_Erase(&FlashEraseInit,&SectorError)!=HAL_OK) 
 				{
-					break;//·¢Éú´íÎóÁË	
+					break;//å‘ç”Ÿé”™è¯¯äº†	
 				}
 				}else addrx+=4;
-				FLASH_WaitForLastOperation(FLASH_WAITETIME);                //µÈ´ıÉÏ´Î²Ù×÷Íê³É
+				FLASH_WaitForLastOperation(FLASH_WAITETIME);                //ç­‰å¾…ä¸Šæ¬¡æ“ä½œå®Œæˆ
 		}
 	}
-	FlashStatus=FLASH_WaitForLastOperation(FLASH_WAITETIME);            //µÈ´ıÉÏ´Î²Ù×÷Íê³É
+	FlashStatus=FLASH_WaitForLastOperation(FLASH_WAITETIME);            //ç­‰å¾…ä¸Šæ¬¡æ“ä½œå®Œæˆ
 	if(FlashStatus==HAL_OK)
 	{
-		 while(WriteAddr<endaddr)//Ğ´Êı¾İ
+		 while(WriteAddr<endaddr)//å†™æ•°æ®
 		 {
-			if(HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,WriteAddr,*pBuffer)!=HAL_OK)//Ğ´ÈëÊı¾İ
+			if(HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,WriteAddr,*pBuffer)!=HAL_OK)//å†™å…¥æ•°æ®
 			{ 
-				break;	//Ğ´ÈëÒì³£
+				break;	//å†™å…¥å¼‚å¸¸
 			}
 			WriteAddr+=4;
 			pBuffer++;
 		}  
 	}
-	HAL_FLASH_Lock();           //ÉÏËø
+	HAL_FLASH_Lock();           //ä¸Šé”
 } 
 
-//´ÓÖ¸¶¨µØÖ·¿ªÊ¼¶Á³öÖ¸¶¨³¤¶ÈµÄÊı¾İ
-//ReadAddr:ÆğÊ¼µØÖ·
-//pBuffer:Êı¾İÖ¸Õë
-//NumToRead:×Ö(32Î»)Êı
+//ä»æŒ‡å®šåœ°å€å¼€å§‹è¯»å‡ºæŒ‡å®šé•¿åº¦çš„æ•°æ®
+//ReadAddr:èµ·å§‹åœ°å€
+//pBuffer:æ•°æ®æŒ‡é’ˆ
+//NumToRead:å­—(32ä½)æ•°
 void STMFLASH_Read(u32 ReadAddr,u32 *pBuffer,u32 NumToRead)   	
 {
 	u32 i;
 	for(i=0;i<NumToRead;i++)
 	{
-		pBuffer[i]=STMFLASH_ReadWord(ReadAddr);//¶ÁÈ¡4¸ö×Ö½Ú.
-		ReadAddr+=4;//Æ«ÒÆ4¸ö×Ö½Ú.	
+		pBuffer[i]=STMFLASH_ReadWord(ReadAddr);//è¯»å–4ä¸ªå­—èŠ‚.
+		ReadAddr+=4;//åç§»4ä¸ªå­—èŠ‚.	
 	}
 }
 
-//////////////////////////////////////////²âÊÔÓÃ///////////////////////////////////////////
-//WriteAddr:ÆğÊ¼µØÖ·
-//WriteData:ÒªĞ´ÈëµÄÊı¾İ
+//////////////////////////////////////////æµ‹è¯•ç”¨///////////////////////////////////////////
+//WriteAddr:èµ·å§‹åœ°å€
+//WriteData:è¦å†™å…¥çš„æ•°æ®
 void Test_Write(u32 WriteAddr,u32 WriteData)   	
 {
-	STMFLASH_Write(WriteAddr,&WriteData,1);//Ğ´ÈëÒ»¸ö×Ö 
+	STMFLASH_Write(WriteAddr,&WriteData,1);//å†™å…¥ä¸€ä¸ªå­— 
 }

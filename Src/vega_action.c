@@ -1,12 +1,12 @@
 /*******************************************************************************
 Copyright:      2018/12/18
 File name:      vega_action.c
-Description:    actionÈ«³¡¶¨Î»£¬Ê¹ÓÃÇ°³õÊ¼»¯Ê®Ãë
-Author:         ĞìÃúÔ¶
-Version£º       1.0
+Description:    actionå…¨åœºå®šä½ï¼Œä½¿ç”¨å‰åˆå§‹åŒ–åç§’
+Author:         å¾é“­è¿œ
+Versionï¼š       1.0
 Data:           2018/12/18 22:36
-History:        ÎŞ
-Bug:            ÎŞ
+History:        æ— 
+Bug:            æ— 
 *******************************************************************************/
 #include "vega_action.h"
 
@@ -18,7 +18,7 @@ void vega_action_reset()
             uprintf(ACTION_USART,"ACT0");
         }
         //chassis_init_pos(0,0);
-        //uprintf(CMD_USART,"¸´Î»£ºx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
+        //uprintf(CMD_USART,"å¤ä½ï¼šx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
 }
 void vega_action_setAll(float pos_x, float pos_y, float angle)
 {
@@ -45,5 +45,5 @@ void vega_action_cherk()
 {
         //HAL_Delay(12000);
 	uprintf(ACTION_USART,"ACTR");
-        //uprintf(CMD_USART,"¸´Î»£ºx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
+        //uprintf(CMD_USART,"å¤ä½ï¼šx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
 }

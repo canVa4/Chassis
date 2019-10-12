@@ -1,22 +1,22 @@
 /*******************************************************************************
 Copyright:      2018/12/18
 File name:      maxon.c
-Description:    maxonµç»ú¿ØÖÆ£¬ÉèÖÃËÙ¶È£¬ÉèÖÃPIÏµÊı£¬±£´æÉèÖÃÏµÊı
-Author:         ĞìÃúÔ¶£¬ÍõÔÆĞù
-Version£º       1.0
+Description:    maxonç”µæœºæ§åˆ¶ï¼Œè®¾ç½®é€Ÿåº¦ï¼Œè®¾ç½®PIç³»æ•°ï¼Œä¿å­˜è®¾ç½®ç³»æ•°
+Author:         å¾é“­è¿œï¼Œç‹äº‘è½©
+Versionï¼š       1.0
 Data:           2018/12/18 22:36
-History:        ÎŞ
+History:        æ— 
 *******************************************************************************/
 #include "maxon.h"
 
 
-//ËÙ¶È·¢ËÍĞ­Òé£¬µÚÈı¸öÔªËØÎª½Úµã£¬×îºóÒ»¸öÎªĞ£ÑéÎ»
+//é€Ÿåº¦å‘é€åè®®ï¼Œç¬¬ä¸‰ä¸ªå…ƒç´ ä¸ºèŠ‚ç‚¹ï¼Œæœ€åä¸€ä¸ªä¸ºæ ¡éªŒä½
 uint8_t sendToSetSpeed[10] = {0x55,0xAA,0x01,0x00,0x04,0x00,0x00,0x00,0x00,0x00};
 uint8_t sendToSetSpeedPI[10] = {0x55,0xAA,0x01,0x00,0x84,0x00,0x00,0x00,0x00,0x00};
 
-/**maxonµç»úÉèÖÃËÙ¶È
-*²ÎÊı£º´®¿ÚºÅ ËÙ¶ÈÖµ
-*·µ»ØÖµ£º ÎŞ
+/**maxonç”µæœºè®¾ç½®é€Ÿåº¦
+*å‚æ•°ï¼šä¸²å£å· é€Ÿåº¦å€¼
+*è¿”å›å€¼ï¼š æ— 
 */
 void maxon_canset3speed(int s1,int s2,int s0)
 {
@@ -78,15 +78,15 @@ void maxon_setSpeed(UART_HandleTypeDef* USARTx, int speed){
 */
 //p:7000 i:4000
 
-/**maxonµç»úÉèÖÃKP
-*²ÎÊı£º´®¿ÚºÅ PÖµ
-*·µ»ØÖµ£º ÎŞ
+/**maxonç”µæœºè®¾ç½®KP
+*å‚æ•°ï¼šä¸²å£å· På€¼
+*è¿”å›å€¼ï¼š æ— 
 */
 void maxon_setSpeed_p(UART_HandleTypeDef* USARTx , int p){
     int i;
     int check = 0;
-    sendToSetSpeedPI[5] = 0x02;//ÃüÁîÆ«ÒÆÁ¿
-    sendToSetSpeedPI[6] = 0x02;//Êı¾İ³¤¶È
+    sendToSetSpeedPI[5] = 0x02;//å‘½ä»¤åç§»é‡
+    sendToSetSpeedPI[6] = 0x02;//æ•°æ®é•¿åº¦
     sendToSetSpeedPI[7] = (uint8_t)(p>>8);
     sendToSetSpeedPI[8] = (uint8_t)(p>>0);
     
@@ -99,16 +99,16 @@ void maxon_setSpeed_p(UART_HandleTypeDef* USARTx , int p){
     
 }
 
-/**maxonµç»úÉèÖÃKI
-*²ÎÊı£º´®¿ÚºÅ KI
-*·µ»ØÖµ£º ÎŞ
+/**maxonç”µæœºè®¾ç½®KI
+*å‚æ•°ï¼šä¸²å£å· KI
+*è¿”å›å€¼ï¼š æ— 
 */
 void maxon_setSpeed_i(UART_HandleTypeDef* USARTx , int si){
     int i;
     int check = 0;
     
-    sendToSetSpeedPI[5] = 0x03;//ÃüÁîÆ«ÒÆÁ¿
-    sendToSetSpeedPI[6] = 0x02;//Êı¾İ³¤¶È
+    sendToSetSpeedPI[5] = 0x03;//å‘½ä»¤åç§»é‡
+    sendToSetSpeedPI[6] = 0x02;//æ•°æ®é•¿åº¦
     sendToSetSpeedPI[7] = (uint8_t)(si>>8);
     sendToSetSpeedPI[8] = (uint8_t)(si>>0);
     
@@ -120,9 +120,9 @@ void maxon_setSpeed_i(UART_HandleTypeDef* USARTx , int si){
     HAL_UART_Transmit(USARTx,(uint8_t *) sendToSetSpeedPI,sizeof(sendToSetSpeedPI),1000);
 }
 
-/**maxonµç»ú±£´æ²ÎÊı
-*²ÎÊı£º´®¿ÚºÅ
-*·µ»ØÖµ£º ÎŞ
+/**maxonç”µæœºä¿å­˜å‚æ•°
+*å‚æ•°ï¼šä¸²å£å·
+*è¿”å›å€¼ï¼š æ— 
 */
 void maxon_save(UART_HandleTypeDef* USARTx){
     uint8_t saveinfo[8] = {0x55 , 0xAA , 0x01 , 0x00 , 0x03 , 0x01 ,0x00 , 0x04};

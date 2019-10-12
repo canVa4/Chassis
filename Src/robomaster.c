@@ -15,7 +15,7 @@ float PID_Release(PID_Struct *PID,float target,float now)
   err_dt=err-PID->last_err; 
   
   err_dt*=0.384f;
-  err_dt+=PID->last_d*0.615f;   //µÍÍ¨ÂË²¨ 
+  err_dt+=PID->last_d*0.615f;   //ä½é€šæ»¤æ³¢ 
   
   PID->last_err=err;
   
@@ -31,7 +31,7 @@ float PID_Release(PID_Struct *PID,float target,float now)
 void can_robomaster_rcv(CanRxMsgTypeDef* pRxMsg)
 {
     //pRxMsg->StdId
-    //ÕâÀïid»¹Ã»¸Ä
+    //è¿™é‡Œidè¿˜æ²¡æ”¹
     int id = pRxMsg->StdId - 0x201;
     if(id > 4 || id < 0) return;
     static int first_flag[4] = {1,1,1,1};

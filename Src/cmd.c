@@ -1,31 +1,31 @@
 /*******************************************************************************
 Copyright:      2018/12/18
 File name:      cmd.c
-Description:    ´æ·Å´®¿ÚÃüÁî£¬cmd³õÊ¼»¯£¨Ê¹ÓÃÇ°±ØĞë³õÊ¼»¯·ÖÅä¿Õ¼ä£©£¬cmd½âÎö£¬
-                cmdÖ´ĞĞº¯Êı£¬cmd°ïÖúº¯Êı
-Author:         ĞìÃúÔ¶
-Version£º       1.0
+Description:    å­˜æ”¾ä¸²å£å‘½ä»¤ï¼Œcmdåˆå§‹åŒ–ï¼ˆä½¿ç”¨å‰å¿…é¡»åˆå§‹åŒ–åˆ†é…ç©ºé—´ï¼‰ï¼Œcmdè§£æï¼Œ
+                cmdæ‰§è¡Œå‡½æ•°ï¼Œcmdå¸®åŠ©å‡½æ•°
+Author:         å¾é“­è¿œ
+Versionï¼š       1.0
 Data:           2018/12/18 22:36
-History:        ÎŞ
-Bug:            ÎŞ
+History:        æ— 
+Bug:            æ— 
 *******************************************************************************/
 #include "cmd.h"
 static cmd_struct cmd_tbl[] = {
     /*
-     *´æ·ÅÃüÁîµÄ½á¹¹Ìå
-     * ÈôĞèÌí¼ÓÃüÁî£¬ĞèÒªÔÚ´Ë¼ÓÉÏ£º
-     * CMD_ADD("ÃüÁîÃû","ÃüÁîÊ¹ÓÃ·½·¨£¨¿ÉÎª¿Õ¸ñ,µ«²»ÄÜ²»¼ÓË«ÒıºÅ£©",¶ÔÓ¦ÃüÁîµÄÖ´ĞĞº¯ÊıÃû)
-     * ×¢Òâ×îºóÒ»¸ö²»ĞèÒª¶ººÅ£¬Ç°ÃæµÄ¶¼ĞèÒª¶ººÅ
+     *å­˜æ”¾å‘½ä»¤çš„ç»“æ„ä½“
+     * è‹¥éœ€æ·»åŠ å‘½ä»¤ï¼Œéœ€è¦åœ¨æ­¤åŠ ä¸Šï¼š
+     * CMD_ADD("å‘½ä»¤å","å‘½ä»¤ä½¿ç”¨æ–¹æ³•ï¼ˆå¯ä¸ºç©ºæ ¼,ä½†ä¸èƒ½ä¸åŠ åŒå¼•å·ï¼‰",å¯¹åº”å‘½ä»¤çš„æ‰§è¡Œå‡½æ•°å)
+     * æ³¨æ„æœ€åä¸€ä¸ªä¸éœ€è¦é€—å·ï¼Œå‰é¢çš„éƒ½éœ€è¦é€—å·
      */
-    CMD_ADD("help","°ïÖú¡£eg£»help",cmd_help_func),
-    CMD_ADD("hello","ÎÊºÃ¡£eg:hello",cmd_hello_func),
-    CMD_ADD("go_straight","Ä³½Ç¶ÈÖ±ĞĞ¡£eg:go_straight speed angle",cmd_go_straight_func),
-    CMD_ADD("reset_vega","¸´Î»È«³¡¶¨Î».eg:reset_vega",cmd_reset_vega),
-    CMD_ADD("angle_pid","µ×ÅÌ×Ô×ª½Çpid",cmd_angle_pid),
-    CMD_ADD("print_pos","´òÓ¡È«³¡¶¨Î»Î»ÖÃ",cmd_print_pos),
-    CMD_ADD("param","ĞŞ¸Ä²ÎÊı",cmd_param_func),
-    CMD_ADD("debug","µ÷ÊÔÓÃ",cmd_debug_func),
-    CMD_ADD("r_position","´ó½­µç»ú4¸öÎ»ÖÃ",cmd_robomaster_position),
+    CMD_ADD("help","å¸®åŠ©ã€‚egï¼›help",cmd_help_func),
+    CMD_ADD("hello","é—®å¥½ã€‚eg:hello",cmd_hello_func),
+    CMD_ADD("go_straight","æŸè§’åº¦ç›´è¡Œã€‚eg:go_straight speed angle",cmd_go_straight_func),
+    CMD_ADD("reset_vega","å¤ä½å…¨åœºå®šä½.eg:reset_vega",cmd_reset_vega),
+    CMD_ADD("angle_pid","åº•ç›˜è‡ªè½¬è§’pid",cmd_angle_pid),
+    CMD_ADD("print_pos","æ‰“å°å…¨åœºå®šä½ä½ç½®",cmd_print_pos),
+    CMD_ADD("param","ä¿®æ”¹å‚æ•°",cmd_param_func),
+    //CMD_ADD("debug","è°ƒè¯•ç”¨",cmd_debug_func),
+    //CMD_ADD("r_position","å¤§æ±Ÿç”µæœº4ä¸ªä½ç½®",cmd_robomaster_position),
     CMD_ADD("r_sp_pid","pid",cmd_r_sp_pid),
     CMD_ADD("r_speed","s",cmd_r_speed),
     CMD_ADD("valve","",cmd_valve_open),
@@ -49,16 +49,16 @@ static cmd_struct cmd_tbl[] = {
     CMD_ADD("go_to","by zx",cmd_go_to_point_for_test)
 };
 char cmd_line[MAX_CMD_LINE_LENGTH + 1];
-char *cmd_argv[MAX_ARGC];  // zx: ´æ²ÎÊıµÄ
+char *cmd_argv[MAX_ARGC];  // zx: å­˜å‚æ•°çš„
     
 void cmd_init()
 {
     for(int i = 0;i < MAX_ARGC;i++){
-        cmd_argv[i] = (char *)malloc(MAX_CMD_ARG_LENGTH + 1);//²»È·¶¨ÊäÈëÊı¾İµÄÄÚ´æ¿Õ¼ä£¬ËùÒÔ·ÖÅäÒ»¿é
+        cmd_argv[i] = (char *)malloc(MAX_CMD_ARG_LENGTH + 1);//ä¸ç¡®å®šè¾“å…¥æ•°æ®çš„å†…å­˜ç©ºé—´ï¼Œæ‰€ä»¥åˆ†é…ä¸€å—
     }
 }
 /*
-*½âÎöÃüÁîº¯Êı
+*è§£æå‘½ä»¤å‡½æ•°
 */
 int cmd_parse(char *cmd_line,int *argc,char *argv[]){
     char c_temp;
@@ -67,12 +67,12 @@ int cmd_parse(char *cmd_line,int *argc,char *argv[]){
     c_temp = cmd_line[i++];  
     while(c_temp != '\r'){
         if(c_temp == ' '){
-            if(arg_index == 0){   //Èç¹ûÃüÁî»òÕß²ÎÊı×Ö·û´®µÚÒ»¸öÊÇ¿Õ¸ñ£¬ÔòºöÂÔ   
+            if(arg_index == 0){   //å¦‚æœå‘½ä»¤æˆ–è€…å‚æ•°å­—ç¬¦ä¸²ç¬¬ä¸€ä¸ªæ˜¯ç©ºæ ¼ï¼Œåˆ™å¿½ç•¥   
                 c_temp = cmd_line[i++];
                 continue;
             }
-            //¿Õ¸ñÎª²ÎÊı»òÕßÃüÁîµÄ·Ö¸ô·û
-            if(arg_cnt == MAX_ARGC){   //Èç¹û²ÎÊı¸öÊı¹ı¶à,Ôò·µ»Ø
+            //ç©ºæ ¼ä¸ºå‚æ•°æˆ–è€…å‘½ä»¤çš„åˆ†éš”ç¬¦
+            if(arg_cnt == MAX_ARGC){   //å¦‚æœå‚æ•°ä¸ªæ•°è¿‡å¤š,åˆ™è¿”å›
                 return -1;
             }
             argv[arg_cnt][arg_index] = 0;
@@ -81,18 +81,18 @@ int cmd_parse(char *cmd_line,int *argc,char *argv[]){
             c_temp = cmd_line[i++];
             continue;
         }
-        if(arg_index == MAX_CMD_ARG_LENGTH){   //Èç¹û²ÎÊı³¤¶È¹ı³¤£¬Ôò±¨´í·µ»Ø
+        if(arg_index == MAX_CMD_ARG_LENGTH){   //å¦‚æœå‚æ•°é•¿åº¦è¿‡é•¿ï¼Œåˆ™æŠ¥é”™è¿”å›
             return -2;
         }
         argv[arg_cnt][arg_index++] = c_temp;
         c_temp = cmd_line[i++];
     }
-    if(arg_cnt == 0 && arg_index == 0){  //Èç¹ûÃüÁî»òÕß²ÎÊıÊÇ¿ÕµÄ£¬Ôò·µ»Ø
+    if(arg_cnt == 0 && arg_index == 0){  //å¦‚æœå‘½ä»¤æˆ–è€…å‚æ•°æ˜¯ç©ºçš„ï¼Œåˆ™è¿”å›
         return -3;
     }
-    //×îºóÒ»¸ö²ÎÊıµÄ½áÊøÃ»ÓĞÔÚÉÏÃæµÄwhileÑ­»·ÖĞ½âÎöµ½
+    //æœ€åä¸€ä¸ªå‚æ•°çš„ç»“æŸæ²¡æœ‰åœ¨ä¸Šé¢çš„whileå¾ªç¯ä¸­è§£æåˆ°
     argv[arg_cnt++][arg_index] = 0;
-    *argc = arg_cnt;//ÃüÁîÊı
+    *argc = arg_cnt;//å‘½ä»¤æ•°
     return 0;
 }
 
@@ -102,11 +102,11 @@ int cmd_exec(int argc,char *argv[]){
  
     cmd_num = sizeof(cmd_tbl)/sizeof(cmd_tbl[0]);
 
-    if(argc == 0){  //Èç¹û²ÎÊıÊÇ¿ÕµÄ£¬Ôò·µ»Ø
+    if(argc == 0){  //å¦‚æœå‚æ•°æ˜¯ç©ºçš„ï¼Œåˆ™è¿”å›
         return -1;
     }
-    for(cmd_index = 0;cmd_index < cmd_num;cmd_index++){   //²éÕÒÃüÁî
-        if(strcmp((char *)(cmd_tbl[cmd_index].cmd_name),(char *)argv[0]) == 0){  //Èç¹ûÕÒµ½ÁËÃüÁî£¬ÔòÖ´ĞĞÃüÁîÏà¶ÔÓ¦µÄº¯Êı
+    for(cmd_index = 0;cmd_index < cmd_num;cmd_index++){   //æŸ¥æ‰¾å‘½ä»¤
+        if(strcmp((char *)(cmd_tbl[cmd_index].cmd_name),(char *)argv[0]) == 0){  //å¦‚æœæ‰¾åˆ°äº†å‘½ä»¤ï¼Œåˆ™æ‰§è¡Œå‘½ä»¤ç›¸å¯¹åº”çš„å‡½æ•°
             cmd_tbl[cmd_index].cmd_func(argc,argv);
             memset(USART_RX_BUF,0,MAX_CMD_LINE_LENGTH + 1);
             return 0;
@@ -120,7 +120,7 @@ void cmd_help_func(int argc,char *argv[]){
     uint32_t cmd_num;
     cmd_num = sizeof(cmd_tbl)/sizeof(cmd_tbl[0]);
     if(argc > 1){
-        //uprintf(CMD_USART,"msg:\n helpÃüÁî²ÎÊı¹ı¶à\n\n");      
+        //uprintf(CMD_USART,"msg:\n helpå‘½ä»¤å‚æ•°è¿‡å¤š\n\n");      
         return;         
     }
     for(i = 0;i < cmd_num;i++){

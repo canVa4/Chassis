@@ -142,7 +142,7 @@ int main(void)
         gpio_exc();
         if(chassis_flag == 1)
         {
-            //chassis_exe();  ��2��Ϊ������ԭ�е�
+            //chassis_exe();  此2行为代码中原有的
             chassis_flag = 0;
             chassis_update();
             
@@ -228,6 +228,7 @@ void SystemClock_Config(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  //以下为后添加的代码，开启滴答计时器
     /**Configure the Systick interrupt time 
     */
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);

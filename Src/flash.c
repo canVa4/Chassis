@@ -1,12 +1,12 @@
 #include "flash.h"
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸ö×ÖµÄÊı¾İ£¬²¢½«µØÖ·×ÔÔö£¬¼õÉÙ´íÎóµÄ¿ÉÄÜ£¬·½±ãÁ¬Ğø¶ÁÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªå­—çš„æ•°æ®ï¼Œå¹¶å°†åœ°å€è‡ªå¢ï¼Œå‡å°‘é”™è¯¯çš„å¯èƒ½ï¼Œæ–¹ä¾¿è¿ç»­è¯»æ•°æ®
   *     
-  * @note	Çë´«ÈëµØÖ·µÄÖ¸Õë£¬ÒÔÊµÏÖ×ÔÔöµÄĞ§¹û
-  * @param  faddr: Êı¾İµÄµØÖ·Ö¸Õë  
+  * @note	è¯·ä¼ å…¥åœ°å€çš„æŒ‡é’ˆï¼Œä»¥å®ç°è‡ªå¢çš„æ•ˆæœ
+  * @param  faddr: æ•°æ®çš„åœ°å€æŒ‡é’ˆ  
   *          
-  * @retval u32: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval u32: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 u32 STMFLASH_ReadWord_Inc(u32* faddr)
 {
@@ -16,12 +16,12 @@ u32 STMFLASH_ReadWord_Inc(u32* faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡°ë×ÖµÄÊı¾İ£¬²¢½«µØÖ·×ÔÔö£¬¼õÉÙ´íÎóµÄ¿ÉÄÜ£¬·½±ãÁ¬Ğø¶ÁÊı¾İ
+  * @brief  è¯»å–åŠå­—çš„æ•°æ®ï¼Œå¹¶å°†åœ°å€è‡ªå¢ï¼Œå‡å°‘é”™è¯¯çš„å¯èƒ½ï¼Œæ–¹ä¾¿è¿ç»­è¯»æ•°æ®
   *     
-  * @note	Çë´«ÈëµØÖ·µÄÖ¸Õë£¬ÒÔÊµÏÖ×ÔÔöµÄĞ§¹û
-  * @param  faddr: Êı¾İµÄµØÖ·Ö¸Õë  
+  * @note	è¯·ä¼ å…¥åœ°å€çš„æŒ‡é’ˆï¼Œä»¥å®ç°è‡ªå¢çš„æ•ˆæœ
+  * @param  faddr: æ•°æ®çš„åœ°å€æŒ‡é’ˆ  
   *          
-  * @retval u16: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval u16: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 u16 STMFLASH_ReadHalfWord_Inc(u32* faddr)
 {
@@ -31,12 +31,12 @@ u16 STMFLASH_ReadHalfWord_Inc(u32* faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸ö×Ö½ÚµÄÊı¾İ£¬²¢½«µØÖ·×ÔÔö£¬¼õÉÙ´íÎóµÄ¿ÉÄÜ£¬·½±ãÁ¬Ğø¶ÁÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªå­—èŠ‚çš„æ•°æ®ï¼Œå¹¶å°†åœ°å€è‡ªå¢ï¼Œå‡å°‘é”™è¯¯çš„å¯èƒ½ï¼Œæ–¹ä¾¿è¿ç»­è¯»æ•°æ®
   *     
-  * @note	Çë´«ÈëµØÖ·µÄÖ¸Õë£¬ÒÔÊµÏÖ×ÔÔöµÄĞ§¹û
-  * @param  faddr: Êı¾İµÄµØÖ·Ö¸Õë  
+  * @note	è¯·ä¼ å…¥åœ°å€çš„æŒ‡é’ˆï¼Œä»¥å®ç°è‡ªå¢çš„æ•ˆæœ
+  * @param  faddr: æ•°æ®çš„åœ°å€æŒ‡é’ˆ  
   *          
-  * @retval u16: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval u16: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 u8 STMFLASH_ReadByte_Inc(u32* faddr)
 {
@@ -46,13 +46,13 @@ u8 STMFLASH_ReadByte_Inc(u32* faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸öfloatµÄÊı¾İ£¬²¢½«µØÖ·×ÔÔö£¬¼õÉÙ´íÎóµÄ¿ÉÄÜ£¬·½±ãÁ¬Ğø¶ÁÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªfloatçš„æ•°æ®ï¼Œå¹¶å°†åœ°å€è‡ªå¢ï¼Œå‡å°‘é”™è¯¯çš„å¯èƒ½ï¼Œæ–¹ä¾¿è¿ç»­è¯»æ•°æ®
   *     
-  * @note	Çë´«ÈëµØÖ·µÄÖ¸Õë£¬ÒÔÊµÏÖ×ÔÔöµÄĞ§¹û
+  * @note	è¯·ä¼ å…¥åœ°å€çš„æŒ‡é’ˆï¼Œä»¥å®ç°è‡ªå¢çš„æ•ˆæœ
   *
-  * @param  faddr: Êı¾İµÄµØÖ·Ö¸Õë  
+  * @param  faddr: æ•°æ®çš„åœ°å€æŒ‡é’ˆ  
   *          
-  * @retval float: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval float: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 float STMFLASH_ReadFloat_Inc(u32* faddr)
 {
@@ -62,11 +62,11 @@ float STMFLASH_ReadFloat_Inc(u32* faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸ö×ÖµÄÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªå­—çš„æ•°æ®
   *     
-  * @param  faddr: Êı¾İµÄµØÖ· 
+  * @param  faddr: æ•°æ®çš„åœ°å€ 
   *          
-  * @retval u32: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval u32: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 u32 STMFLASH_ReadWord(u32 faddr)
 {
@@ -74,11 +74,11 @@ u32 STMFLASH_ReadWord(u32 faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸ö°ë×ÖµÄÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªåŠå­—çš„æ•°æ®
   *     
-  * @param  faddr: Êı¾İµÄµØÖ· 
+  * @param  faddr: æ•°æ®çš„åœ°å€ 
   *          
-  * @retval u16: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval u16: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 u16 STMFLASH_ReadHalfWord(u32 faddr)
 {
@@ -86,11 +86,11 @@ u16 STMFLASH_ReadHalfWord(u32 faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸ö×Ö½ÚµÄÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªå­—èŠ‚çš„æ•°æ®
   *     
-  * @param  faddr: Êı¾İµÄµØÖ· 
+  * @param  faddr: æ•°æ®çš„åœ°å€ 
   *          
-  * @retval u8: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval u8: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 u8 STMFLASH_ReadByte(u32 faddr)
 {
@@ -98,11 +98,11 @@ u8 STMFLASH_ReadByte(u32 faddr)
 }
 
 /**
-  * @brief  ¶ÁÈ¡Ò»¸öfloatµÄÊı¾İ
+  * @brief  è¯»å–ä¸€ä¸ªfloatçš„æ•°æ®
   *     
-  * @param  faddr: Êı¾İµÄµØÖ· 
+  * @param  faddr: æ•°æ®çš„åœ°å€ 
   *          
-  * @retval float: µØÖ·¶ÔÓ¦µÄflashÖĞµÄÊı¾İ
+  * @retval float: åœ°å€å¯¹åº”çš„flashä¸­çš„æ•°æ®
   */
 float STMFLASH_ReadFloat(u32 faddr)
 {
@@ -110,15 +110,15 @@ float STMFLASH_ReadFloat(u32 faddr)
 }
 
 /**
-  * @brief  ÔÚÏàÓ¦µÄÎ»ÖÃÉÏĞ´ÈëÒ»¸öfloatĞÍµÄÊı¾İ£¬ĞèÒª°ÑËûµ±×÷Ò»¸öu32ĞÍµÄÊı¾İ´æÈë
+  * @brief  åœ¨ç›¸åº”çš„ä½ç½®ä¸Šå†™å…¥ä¸€ä¸ªfloatå‹çš„æ•°æ®ï¼Œéœ€è¦æŠŠä»–å½“ä½œä¸€ä¸ªu32å‹çš„æ•°æ®å­˜å…¥
   *			
-  * @note	µ±¶ÁÈ¡Ê±ÇëÊ¹ÓÃSTMFLASH_ReadFloat»òSTMFLASH_ReadFloat_Inc
+  * @note	å½“è¯»å–æ—¶è¯·ä½¿ç”¨STMFLASH_ReadFloatæˆ–STMFLASH_ReadFloat_Inc
   *
-  * @param  uint32_t Address: Êı¾İµÄµØÖ·  
+  * @param  uint32_t Address: æ•°æ®çš„åœ°å€  
   *          
-  * @param  float Data: Êı¾İ
+  * @param  float Data: æ•°æ®
   *
-  * @retval FLASH_Status: flashµÄ×´Ì¬
+  * @retval FLASH_Status: flashçš„çŠ¶æ€
   */
 FLASH_Status FLASH_ProgramFloat(uint32_t Address, float Data)
 {

@@ -1,12 +1,12 @@
 /*******************************************************************************
 Copyright:      2018/12/18
 File name:      track.c
-Description:    µ×ÅÌ¹ì¼£¹æ»®
-Author:         ÍõÔÆĞù
-Version£º       1.0
+Description:    åº•ç›˜è½¨è¿¹è§„åˆ’
+Author:         ç‹äº‘è½©
+Versionï¼š       1.0
 Data:           2018/12/18 22:36
-History:        ÎŞ 
-Bug:            NUM_POINTS>5000×óÓÒ»áÒç³ö
+History:        æ—  
+Bug:            NUM_POINTS>5000å·¦å³ä¼šæº¢å‡º
 *******************************************************************************/
 #include "track.h"
 #include "stmflash.h"
@@ -18,16 +18,16 @@ int track_max_speed = 1100;
 float track_test_offset = 0;
 
 uint8_t track_section_flag = 0;
-float track_turn_throw = PI * 45 / 180;//Í¶ÖÀµÄĞı×ª½Ç
+float track_turn_throw = PI * 45 / 180;//æŠ•æ·çš„æ—‹è½¬è§’
 float track_turn_throw_2 = PI * 45 / 180;
 float track_turn_throw_3 = PI * 45 / 180;
 
-float track_turn_throw_blue = PI * 45 / 180;//Í¶ÖÀµÄĞı×ª½Ç
+float track_turn_throw_blue = PI * 45 / 180;//æŠ•æ·çš„æ—‹è½¬è§’
 float track_turn_throw_2_blue = PI * 45 / 180;
 float track_turn_throw_3_blue = PI * 45 / 180;
 
 void track_goline(int n, float x1, float y1, float x2, float y2)
-//²ÎÊı£º·Ö¶ÎÊı ÆğÊ¼µãx ÆğÊ¼µãy ÖÕÖ¹µãx ÖÕÖ¹µãy // n >= 1
+//å‚æ•°ï¼šåˆ†æ®µæ•° èµ·å§‹ç‚¹x èµ·å§‹ç‚¹y ç»ˆæ­¢ç‚¹x ç»ˆæ­¢ç‚¹y // n >= 1
 {
     param_a = 2 * chassis_speed_max;
     if(n <= 0) n = 1;
@@ -84,7 +84,7 @@ int chassis_winding_and_deliver()
         
         
         
-        chassis_posnum = NUM_POINTS;//µÚÒ»¶ÎÈ«³ÌÇúÏßµãÊı
+        chassis_posnum = NUM_POINTS;//ç¬¬ä¸€æ®µå…¨ç¨‹æ›²çº¿ç‚¹æ•°
         state =3;
         break;
       case 3:
@@ -93,7 +93,7 @@ int chassis_winding_and_deliver()
             ChassisSignal.m_FinishFlag._position_flag = 0;
             ChassisSignal.m_CtrlFlag._routeflag = 0;
             ChassisSignal.m_CtrlFlag._sensor_flag = 0;
-            //uprintf(CMD_USART,"½»½Ó£¡\r\n");
+            //uprintf(CMD_USART,"äº¤æ¥ï¼\r\n");
             state = 0;
             return 1;
         }
@@ -123,7 +123,7 @@ int chassis_winding_and_deliver_1()
             }
         
         
-        chassis_posnum = NUM_POINTS1;//µÚÒ»¶ÎÈ«³ÌÇúÏßµãÊı
+        chassis_posnum = NUM_POINTS1;//ç¬¬ä¸€æ®µå…¨ç¨‹æ›²çº¿ç‚¹æ•°
         //vega_action_reset();
         chassis_update();
         
@@ -136,7 +136,7 @@ int chassis_winding_and_deliver_1()
             ChassisSignal.m_FinishFlag._position_flag = 0;
             ChassisSignal.m_CtrlFlag._routeflag = 0;
             ChassisSignal.m_CtrlFlag._sensor_flag = 0;
-            //uprintf(CMD_USART,"½»½Ó£¡\r\n");
+            //uprintf(CMD_USART,"äº¤æ¥ï¼\r\n");
             state = 0;
             return 1;
         }
@@ -165,7 +165,7 @@ int chassis_winding_and_deliver_2()
               chassis_init_pos(ORIGIN_X5,ORIGIN_Y5);
             }
         
-        chassis_posnum = NUM_POINTS2;//µÚÒ»¶ÎÈ«³ÌÇúÏßµãÊı
+        chassis_posnum = NUM_POINTS2;//ç¬¬ä¸€æ®µå…¨ç¨‹æ›²çº¿ç‚¹æ•°
         //vega_action_reset();
         chassis_update();
         //uprintf(CMD_USART,"x = %f y = %f ang = %f\r\n",chassis.pos_x,chassis.pos_y,chassis.angle);
@@ -177,7 +177,7 @@ int chassis_winding_and_deliver_2()
             ChassisSignal.m_FinishFlag._position_flag = 0;
             ChassisSignal.m_CtrlFlag._routeflag = 0;
             ChassisSignal.m_CtrlFlag._sensor_flag = 0;
-            //uprintf(CMD_USART,"½»½Ó£¡\r\n");
+            //uprintf(CMD_USART,"äº¤æ¥ï¼\r\n");
             state = 0;
             return 1;
         }
@@ -186,7 +186,7 @@ int chassis_winding_and_deliver_2()
     return 0;
 }
 /*
-* ĞŞ¸Ä£º5/22 4£º21---->½»½ÓÍêºó£¬ÏòÇ°¼ĞÊŞ¹ÇÔÙÍËºóÔÙË®Æ½ÏòÓÒ×ßµ½Í¶ÖÀÇøÇ°£¬Ïòºó²»Ìù±ßÊÇÒòÎªºóÂÖÁ½¸öÌù±ß¶¼¼ì²â²»µ½ÁË
+* ä¿®æ”¹ï¼š5/22 4ï¼š21---->äº¤æ¥å®Œåï¼Œå‘å‰å¤¹å…½éª¨å†é€€åå†æ°´å¹³å‘å³èµ°åˆ°æŠ•æ·åŒºå‰ï¼Œå‘åä¸è´´è¾¹æ˜¯å› ä¸ºåè½®ä¸¤ä¸ªè´´è¾¹éƒ½æ£€æµ‹ä¸åˆ°äº†
 */
 int chassis_calbration_and_craw()
 {
@@ -194,7 +194,7 @@ int chassis_calbration_and_craw()
 }
 
 /*
-* ĞŞ¸Ä£ºÎŞ
+* ä¿®æ”¹ï¼šæ— 
 */
 int chassis_throw_thrice_first()
 {
@@ -203,8 +203,8 @@ int chassis_throw_thrice_first()
 
 
 /*
-* ĞŞ¸Ä£ºÔö¼Óupper_flag 3¶àÒ»¸ö±äĞÎ
-* ´ı²â¡£¡£¡£¡£
+* ä¿®æ”¹ï¼šå¢åŠ upper_flag 3å¤šä¸€ä¸ªå˜å½¢
+* å¾…æµ‹ã€‚ã€‚ã€‚ã€‚
 */
 int chassis_throw_thrice_third()
 {

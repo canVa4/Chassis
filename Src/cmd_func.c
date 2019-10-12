@@ -1,12 +1,12 @@
 /*******************************************************************************
 Copyright:      2018/12/18
 File name:      cmd_func.c
-Description:    ´æ·Å´®¿ÚÃüÁîº¯Êı£¬ÓÃ»§×Ô¼ºÌí¼Ó£¬ÒªÇóÉè³ÉÍâ²¿¿ÉÒÔµ÷ÓÃ
-Author:         ĞìÃúÔ¶
-Version£º       1.0
+Description:    å­˜æ”¾ä¸²å£å‘½ä»¤å‡½æ•°ï¼Œç”¨æˆ·è‡ªå·±æ·»åŠ ï¼Œè¦æ±‚è®¾æˆå¤–éƒ¨å¯ä»¥è°ƒç”¨
+Author:         å¾é“­è¿œ
+Versionï¼š       1.0
 Data:           2018/12/18 22:36
-History:        ÎŞ
-Bug:            ÎŞ
+History:        æ— 
+Bug:            æ— 
 *******************************************************************************/
 #include "cmd_func.h"
 
@@ -15,9 +15,9 @@ void cmd_hello_func(int argc,char *argv[])
 {
   uprintf(CMD_USART,"hello world");
   ChassisSignal.m_CtrlFlag._handle_flag = 0;
-  //modify_x = ORIGIN_X - (chassis.pos_x - modify_x);//ĞŞ¸ÄÈ«³¡¶¨Î»³õÊ¼Öµ
+  //modify_x = ORIGIN_X - (chassis.pos_x - modify_x);//ä¿®æ”¹å…¨åœºå®šä½åˆå§‹å€¼
   //modify_y = ORIGIN_Y - (chassis.pos_y - modify_y);
-  chassis.g_fturn = 0;//·ÀÖ¹·½Ïò»·Í»±ä 
+  chassis.g_fturn = 0;//é˜²æ­¢æ–¹å‘ç¯çªå˜ 
   chassis_update();
   //chassis_modify_pos(chassis_xpos,chassis_ypos,ORIGIN_X,ORIGIN_Y);
   chassis_poscnt = 0;
@@ -37,7 +37,7 @@ void cmd_reset_vega(int argc, char *argv[])
   vega_action_reset();
   //uprintf(ACTION_USART,"ACTR");
   //vega_action_setAngle(0);
-  uprintf(CMD_USART,"¸´Î»£ºx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
+  uprintf(CMD_USART,"å¤ä½ï¼šx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
 }
 
 
@@ -51,7 +51,7 @@ void cmd_angle_pid(int argc, char *argv[])
 void cmd_print_pos(int argc, char *argv[])
 {
   uprintf(CMD_USART,"x = %f, y = %f,  angle = %f\r\n",chassis.pos_x,chassis.pos_y,chassis.angle);
-  //uprintf(CMD_USART,"¸´Î»£ºx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
+  //uprintf(CMD_USART,"å¤ä½ï¼šx = %f   y = %f   angle = %f\r\n",chassis.g_vega_pos_x,chassis.g_vega_pos_y,chassis.g_vega_angle);
 }
 
 void cmd_debug_func(int argc, char *argv[])
@@ -104,7 +104,7 @@ void cmd_param_func(int argc, char *argv[])
   
 }
 
-void cmd_robomaster_position(int argc, char *argv[])//µÚ1234¸ö²ÎÊıÎªrobomasterµçµ÷µÄid£¬¿´¶ÔÓ¦µçµ÷ÉÁÂÌµÆÆµÂÊ¿ÉÖªid
+void cmd_robomaster_position(int argc, char *argv[])//ç¬¬1234ä¸ªå‚æ•°ä¸ºrobomasterç”µè°ƒçš„idï¼Œçœ‹å¯¹åº”ç”µè°ƒé—ªç»¿ç¯é¢‘ç‡å¯çŸ¥id
 {
   for(int i = 0; i < 4; i++)
   {

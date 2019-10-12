@@ -52,7 +52,7 @@ int medical_take_off = 0;
 
 
 
-                Ôö¼ÓÁËÓÃÓÚ»»³¡µÄPE7£¨ÂÌÉ«¿ª¹Ø£©¡¢PE8£¨ºìÉ«¿ª¹Ø£©£¬INPUTÄ£Ê½ÉÏÀ­£¬Ã»ÓĞÓÃcubeÅäÖÃ£¬ÖØĞÂÉú³É´úÂëµÄÊ±ºò×¢ÒâÒ»ÏÂ£¡£¡£¡£¡
+                å¢åŠ äº†ç”¨äºæ¢åœºçš„PE7ï¼ˆç»¿è‰²å¼€å…³ï¼‰ã€PE8ï¼ˆçº¢è‰²å¼€å…³ï¼‰ï¼ŒINPUTæ¨¡å¼ä¸Šæ‹‰ï¼Œæ²¡æœ‰ç”¨cubeé…ç½®ï¼Œé‡æ–°ç”Ÿæˆä»£ç çš„æ—¶å€™æ³¨æ„ä¸€ä¸‹ï¼ï¼ï¼ï¼
 
 
 
@@ -245,7 +245,7 @@ void gpio_exc()
     {
        gpio_flag = 1;
        ChassisSignal.m_CtrlFlag._handle_flag = 0;
-       chassis.g_fturn = 0;//·ÀÖ¹·½Ïò»·Í»±ä 
+       chassis.g_fturn = 0;//é˜²æ­¢æ–¹å‘ç¯çªå˜ 
        chassis_update();
             
        chassis_poscnt = 0;
@@ -258,7 +258,7 @@ void gpio_exc()
     {
        gpio_flag1 = 1;
        ChassisSignal.m_CtrlFlag._handle_flag = 0;
-       chassis.g_fturn = 0;//·ÀÖ¹·½Ïò»·Í»±ä 
+       chassis.g_fturn = 0;//é˜²æ­¢æ–¹å‘ç¯çªå˜ 
        chassis_update();
             
        chassis_poscnt = 0;
@@ -270,7 +270,7 @@ void gpio_exc()
 //    {
 //       gpio_flag = 1;
 //       ChassisSignal.m_CtrlFlag._handle_flag = 0;
-//       chassis.g_fturn = 0;//·ÀÖ¹·½Ïò»·Í»±ä 
+//       chassis.g_fturn = 0;//é˜²æ­¢æ–¹å‘ç¯çªå˜  
 //       chassis_update();
 //            
 //       chassis_poscnt = 0;
